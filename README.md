@@ -582,7 +582,7 @@ from cubiczan.superserve import SandboxPool
 
 with SandboxPool() as pool:
     pool.acquire("agent-a").commands.run("apt-get install -y my-deps")
-    pool.acquire("agent-a").commands.run("python3 -c 'print("ready")'")  # Same sandbox, deps still there
+    pool.acquire("agent-a").commands.run("python3 -c \"print('ready')\"")  # Same sandbox, deps still there
 ```
 
 **CI validation pipeline (clone, install, test):**
