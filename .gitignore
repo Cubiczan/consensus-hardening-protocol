@@ -14,6 +14,17 @@ build/
 .chp_registry.json
 node_modules/
 
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs and coverage
+*.log
+.coverage
+htmlcov/
+coverage.xml
+
 # Local separate git dir (sandbox workaround)
 chp.git/
 
