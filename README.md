@@ -1,53 +1,19 @@
 # Consensus Hardening Protocol
 
-> **Cubiczan stack** — [Profile](https://github.com/Cubiczan) · [software-factory](https://github.com/Cubiczan/software-factory) · **You are here:** `consensus-hardening-protocol`
-
-
-## Demo
-
-[![Watch the CHP demo (~30s)](docs/media/chp-thumbnail.jpg)](docs/media/chp-demo.mp4)
-
-> _A 30-second walkthrough of CHP: title, problem, architecture, live `chp-start` / `chp-receive` / `chp-validate` terminal sessions, hardened-vs-unhardened benchmark, and closing card. A longer mirror is also available at [`docs/media/chp-demo-3min.mp4`](docs/media/chp-demo-3min.mp4)._
-
-<!-- chp-screenshot-gallery -->
-### Screenshots
-
-**Architecture — six composed subsystems**
-
-![Architecture](docs/media/chp-shot-architecture.jpg)
-
-**`chp-start` — session initialization, gate checks, adversarial foundation attack**
-
-![chp-start terminal](docs/media/chp-shot-chp-start.jpg)
-
-**`chp-receive` — partner packet ingestion with explicit state-machine transition**
-
-![chp-receive terminal](docs/media/chp-shot-partner-receive.jpg)
-
-**`chp-validate` — third-party validation promotes the item to `LOCKED`**
-
-![chp-validate terminal](docs/media/chp-shot-validate-locked.jpg)
-
-**Benchmark — hardened vs unhardened consensus on the same decision and models**
-
-![Benchmark chart](docs/media/chp-shot-benchmark.jpg)
-<!-- /chp-screenshot-gallery -->
-
-### Protocol lifecycle at a glance
-
-![CHP Protocol Phases](docs/media/chp-phases.jpg)
-
-> _Four hardened phases (Propose -> Validate -> Triangulate -> Harden) with explicit entry gates, state transitions, and audit artifacts. `LOCKED` is the only state downstream systems may consume._
-
 Developer and enterprise infrastructure for building hardened, human-auditable multi-agent decision workflows.
 
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-42%20passing-brightgreen)](tests/)
+[![Arize Ax](https://img.shields.io/badge/observability-arize%20ax-7C3AED)](https://arize.com/docs/ax)
 
 ---
 
-## What this is
+## Architecture at a Glance
+
+Three-layer design: agents execute, CHP governs, Arize Ax observes.
+
+![Multi-Agent Orchestration Architecture](docs/media/chp-orchestration-architecture.png)
 
 As organizations deploy multiple specialized AI agents (a compliance agent, a strategy agent, an engineering agent, …), they hit three predictable failures:
 
@@ -55,7 +21,7 @@ As organizations deploy multiple specialized AI agents (a compliance agent, a st
 2. **Reasoning opacity** — humans get a conclusion without seeing how it was reached
 3. **Output drift** — agents produce prose; humans need something runnable
 
-Consensus Hardening Protocol composes five well-specified subsystems to solve all three:
+CHP composes five well-specified subsystems to solve all three:
 
 | Subsystem | Role | Spec it implements |
 |---|---|---|
@@ -284,10 +250,6 @@ See [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md) for the full walkthrough, recommended tal
 ---
 
 ## Architecture
-
-![CHP Architecture](docs/media/chp-architecture.jpg)
-
-> _Six composed subsystems. Each is independently specifiable and composable; CHP sits at the center coordinating cross-model decision hardening._
 
 ```
                         ┌──────────────────────────┐
@@ -665,6 +627,80 @@ from cubiczan.superserve import (
 
 ---
 
+## Arize Ax Observability Integration
+
+CHP is integrated with [Arize Ax](https://arize.com/docs/ax) for production-grade LLM observability. Every agent turn, grounding check, CHP gate pass, and sandbox execution emits OpenTelemetry spans that flow into Arize Ax, giving you full visibility into decision quality across the entire consensus lifecycle.
+
+### Why Arize Ax
+
+CHP already provides decision governance — R0 gates, adversarial attacks, payload integrity, third-party validation. But governance without observability is a black box. Arize Ax closes that gap:
+
+| CHP Concept | Arize Ax Counterpart | What It Gives You |
+|---|---|---|
+| Agent expansion/compression cycle | **AGENT span** with LLM + CHAIN sub-spans | See each agent's reasoning trace, latency, and token usage |
+| Grounding check (verified/inferred) | **EVALUATOR span** with grounding_quality score | Automated detection of hallucination risk at scale |
+| R0 gate (solvable/scoped/valid) | **GUARDRAIL span** with pass/fail + violations | Block low-quality decisions before they propagate |
+| Foundation attack + scoring | **EVALUATOR span** with foundation_score attribute | Track adversarial robustness over time |
+| Partner packet exchange | **TOOL span** with payload integrity attributes | Audit cross-model communication and echo verification |
+| SuperServe sandbox execution | **TOOL span** with sandbox_id, exit_code, stdout | Full audit trail of isolated code execution |
+| Full CHP session lifecycle | **Session** grouping all spans | One trace tree per decision from EXPLORING to LOCKED |
+
+### Span Mapping
+
+![CHP to Arize Ax Span Mapping](docs/media/chp-arize-span-mapping.png)
+
+### Setup
+
+Install the tracing packages and register your Arize credentials. CHP uses `arize-otel` with OpenInference semantic conventions:
+
+```bash
+pip install arize-otel openinference-instrumentation-openai
+```
+
+```python
+from arize.otel import register, Endpoint
+from openinference.instrumentation.openai import OpenAIInstrumentor
+
+tracer_provider = register(
+    space_id="U3BhY2U6NDM4NTI6SDBzSA==",  # Your Space ID
+    api_key="YOUR_API_KEY",                   # From Settings > API Keys
+    project_name="chp-decisions",
+    endpoint=Endpoint.ARIZE,
+)
+OpenAIInstrumentor().instrument(tracer_provider=tracer_provider)
+```
+
+CHP gates, grounding checks, and sandbox executions use manual CHAIN and TOOL spans with custom attributes (`chp.phase`, `chp.state`, `chp.foundation_score`). LLM calls are auto-instrumented. All traces route to Arize Ax Space **43852** via OTLP/gRPC.
+
+### What You Get
+
+- **Tracing**: Every agent turn is a visible span tree. Drill into expansion steps, grounding verdicts, and CHP gate results.
+- **Evaluation**: Automated evaluators score foundation validity, grounding confidence, and consensus quality. Run evals on production traces or experiment datasets.
+- **Dashboards**: Aggregate CHP health metrics — lock rate, average foundation score, hallucination risk frequency, sandbox pass rate — alongside latency and token cost.
+- **Guardrails**: Prevent outputs that fail CHP foundation thresholds from reaching downstream consumers.
+- **Experiments**: A/B test prompts and models against CHP-validated datasets. Gate deployment on eval pass rates.
+- **Sessions**: Full decision lifecycle (EXPLORING → LOCKED) in one trace, with every intermediate state visible.
+
+---
+
+## CHP Decision Lifecycle
+
+Every decision follows this state machine before it can be locked:
+
+![CHP Decision Lifecycle](docs/media/chp-state-lifecycle.png)
+
+A decision starts in **EXPLORING** and must pass the R0 gate, survive adversarial foundation attack, exchange verified partner packets, and receive third-party confirmation before reaching **LOCKED**. At any point it can be **HALTed** (R0 failure, parity mismatch) or **REFRAMED** (foundation score below 70). Round 5 forces unresolved decisions to human review.
+
+---
+
+## Demo
+
+[![Watch the 3-minute CHP demo](docs/media/chp-thumbnail.png)](docs/media/chp-demo-3min.mp4)
+
+> _A 3-minute walkthrough of CHP: session initialization, partner packet ingestion, adversarial validation, and final lock._
+
+---
+
 ## Tests
 
 ```bash
@@ -675,46 +711,6 @@ PYTHONPATH=src pytest tests/ -v
 The focused suite currently has 42 passing tests covering protocol rendering, payload integrity, gate enforcement, lock progression, context reuse, strict packet contracts, the adversary runner, CFO accuracy guard, CFO OS behavior, workbook/deck exporters, and the finance workflow engines.
 
 ---
-
----
-
-## Cubiczan stack
-
-**Start here:** [software-factory](https://github.com/Cubiczan/software-factory) · [Profile](https://github.com/Cubiczan)
-
-Cubiczan builds **auditable AI for finance and governance** — multi-agent systems where every recommendation traces to policy, reasoning, and human approval.
-
-### Governance & orchestration
-
-| Repo | Role |
-|------|------|
-| [consensus-hardening-protocol](https://github.com/Cubiczan/consensus-hardening-protocol) | CHP — adversarial review, lock states, probabilistic confidence |
-| [agent-conductor](https://github.com/Cubiczan/agent-conductor) | MCP orchestration, SKILL registry, CHP decision routing |
-| [compliance-as-code-agent](https://github.com/Cubiczan/compliance-as-code-agent) | YAML policy packs, scan/fix/validate, signed audit trails |
-| [cleanmandate](https://github.com/Cubiczan/cleanmandate) | Verified agent payment mandates (Cleanverse A-Pass / CCP / A-Token) |
-
-### Corporate finance
-
-| Repo | Role |
-|------|------|
-| [Strata](https://github.com/Cubiczan/Strata) | CFO maturity assessment, rubric-graded deliverables, 90-day roadmap |
-| [Metabocommand](https://github.com/Cubiczan/Metabocommand) | Metabolic commerce — capital reflex, approval queues, agent action log |
-| [meshcfo](https://github.com/Cubiczan/meshcfo) | Auditable multi-agent CFO — forecast, investment case, board output |
-| [working-capital-optimizer](https://github.com/Cubiczan/working-capital-optimizer) | AR/AP/inventory mesh — shrink cash conversion cycle |
-| [cash-flow-optimizer](https://github.com/Cubiczan/cash-flow-optimizer) | 13-week forecast, Xero + Precoro + Outlook |
-| [finance-cockpit](https://github.com/Cubiczan/finance-cockpit) | Jira budget, burn rate, runway dashboard |
-
-### How they compose
-
-```
-Brief / mandate → CHP foundation + adversarial gate
-       → specialist finance agents (Strata / MeshCFO / Metabocommand / WCO)
-       → policy + compliance-as-code checks
-       → human approval queue (CHP lock / Metabocommand / cleanmandate)
-       → signed audit export
-```
-
-**Canonical org mirror:** [icohangar-ops](https://github.com/icohangar-ops) · **Codeberg:** [cubiczan](https://codeberg.org/cubiczan)
 
 ## License
 
