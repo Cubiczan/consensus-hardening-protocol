@@ -14,6 +14,11 @@ runs it in an isolated Firecracker microVM and checks for:
 Usage:
     from cubiczan.superserve import CHPGate, CHPGateResult
 
+# --- Datadog LLM Observability (no-op unless DD_LLMOBS_ENABLED) ---
+from cme.observability import init_observability
+
+init_observability("consensus-hardening-protocol")
+
     gate = CHPGate(strict=True)
     result = gate.evaluate_proposal(code, proposal_id="prop-001")
 

@@ -21,6 +21,7 @@ classifiers = [
 ]
 dependencies = [
   "cubiczan-resilience @ git+https://github.com/icohangar-ops/cubiczan-resilience.git#subdirectory=python",
+  "ddtrace>=2.8",
 ]
 
 [project.optional-dependencies]

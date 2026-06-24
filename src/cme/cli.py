@@ -8,6 +8,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import List
 
+# --- Datadog LLM Observability (no-op unless DD_LLMOBS_ENABLED) ---
+from cme.observability import init_observability
+
+init_observability("consensus-hardening-protocol")
+
 from cme.bridge import EntryPoint
 from cme.cfo_os import (
     BoardBrief,
