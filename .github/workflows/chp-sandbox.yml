@@ -1,0 +1,83 @@
+# CHP Sandbox CI/CD Pipeline
+# Verifies all demo verticals pass CHP compliance gates on every push/PR
+# See: .chp-config.yaml for gating behavior configuration
+
+name: CHP Sandbox Verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  sandbox-verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run CHP Sandbox Demos
+        run: |
+          python examples/run-all.py
+
+      - name: Verify R0 Gate Results
+        run: |
+          python -c "
+import json
+with open('chp_enterprise_demo.json') as f:
+    data = json.load(f)
+failures = []
+for scenario in data.get('scenarios', []):
+    r0 = scenario.get('r0_gate', {})
+    verdict = r0.get('verdict', '') if r0 else ''
+    severity = r0.get('severity', 0) if r0 else 0
+    name = scenario.get('name', 'unknown')
+    if verdict.upper() in ('ESCALATE', 'FAIL'):
+        failures.append(f'{name}: {verdict} (severity {severity})')
+if failures:
+    print('::warning::CHP R0 violations detected:')
+    for f in failures:
+        print(f'::warning::  - {f}')
+    print('FAIL')
+    exit(1)
+else:
+    print('All CHP sandbox gates passed.')
+"
+
+      - name: SuperServe Hash Verification
+        run: |
+          python examples/chp_sandbox_superserve.py --verify
+
+      - name: Upload CHP Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: chp-demo-reports-${{ matrix.python-version }}
+          path: |
+            examples/*.html
+            examples/*.json
+          retention-days: 30
+
+      - name: Upload CHP Config
+        uses: actions/upload-artifact@v4
+        with:
+          name: chp-config
+          path: .chp-config.yaml
+          retention-days: 30

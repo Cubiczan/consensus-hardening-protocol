@@ -1,0 +1,106 @@
+{
+  "decision_id": "chp-legal-20260611-192832",
+  "title": "SaaS Master Services Agreement \u2014 DataVault Inc. ($240K ACV)",
+  "input_data": {
+    "contract_type": "MSA + SOW",
+    "vendor": "DataVault Inc.",
+    "acv": 240000,
+    "term_months": 36,
+    "total_contract_value": 720000,
+    "jurisdiction": "New York",
+    "governing_law": "New York",
+    "has_dpa": false,
+    "liability_caps": [
+      {
+        "section": "8.1(a)",
+        "cap": 500000,
+        "type": "general liability"
+      },
+      {
+        "section": "8.4",
+        "cap": "1x fees paid in prior 12 months (~$240K)",
+        "type": "data breach"
+      }
+    ],
+    "termination_notice_days": 30,
+    "auto_renewal": true,
+    "auto_renewal_term_months": 12
+  },
+  "lock_state": "PROVISIONAL_LOCK",
+  "foundation": {
+    "agent_id": "contract-reviewer-v1",
+    "claim": "DataVault Inc. MSA is standard SaaS terms with acceptable liability cap of $500K and 30-day termination notice. Recommend execution as-is.",
+    "sources": [
+      "DataVault Inc. MSA v2.4 (received 2026-05-28)",
+      "DataVault Inc. SOW #2026-03 for data migration services",
+      "Vendor risk assessment questionnaire (completed 2026-04)",
+      "Market benchmark: SaaS MSA liability caps average $250K-$1M for $240K ACV",
+      "Existing vendor comparison: 5 peer companies' MSAs in repository"
+    ],
+    "reasoning_chain": [
+      "Step 1: Vendor MSA received, reviewed all 12 sections",
+      "Step 2: Liability cap of $500K in Section 8.1(a) is within market range",
+      "Step 3: 30-day termination notice is standard \u2014 no special notice period needed",
+      "Step 4: Indemnification clause is reciprocal, not one-sided",
+      "Step 5: Recommend execution with no redlines needed"
+    ],
+    "confidence": 0.79,
+    "timestamp": "2026-06-11T19:28:32.350689+00:00"
+  },
+  "attack": {
+    "agent_id": "adversary-chp",
+    "vulnerability": "The MSA has a CLASHING LIABILITY STRUCTURE: Section 8.1(a) caps general liability at $500K, but Section 8.4 caps data breach liability at only '1x fees paid in prior 12 months' (~$240K) \u2014 conflicting caps for a data migration vendor who will handle PHI/PII. There is NO Data Processing Addendum (DPA), which violates NY SHIELD Act requirements for vendors processing personal data. The auto-renewal clause (12 months) conflicts with the stated 30-day termination notice \u2014 to avoid auto-renewal, the customer must give notice 90+ days before term end, effectively making it a 90-day notice period despite stating 30 days.",
+    "severity": 0.89,
+    "evidence": "Section 8.4 cap: $240K (1x fees) vs market standard of $500K-$1M for data breach. No DPA despite vendor handling personal data \u2014 NY SHIELD Act Sec 899-aa requires written data security agreements with third-party vendors. Auto-renewal buried in Section 10.3: 'Either party must provide written notice of non-renewal at least 90 days prior to the end of the initial term' \u2014 contradicts stated '30-day termination notice.' The SOW includes data migration of employee records (PII).",
+    "recommendation": "R0 ESCALATE: Material issues found: (1) Clashing liability caps create ambiguity on data breach liability. (2) Missing DPA violates NY SHIELD Act. (3) Auto-renewal notice period is 90 days, not 30 as stated. Do not execute without legal review. Escalate to chief compliance counsel."
+  },
+  "gate_result": {
+    "passed": false,
+    "verdict": "ESCALATE",
+    "discrepancies": [
+      "Clashing liability caps: $500K general vs ~$240K data breach (Section 8.1 vs 8.4)",
+      "Missing Data Processing Addendum \u2014 violates NY SHIELD Act requirements",
+      "Auto-renewal notice period is 90 days, not 30 days as stated (Section 10.3)",
+      "Data migration SOW includes PII but no data security provisions found"
+    ],
+    "adjusted_confidence": 0.34500000000000003,
+    "timestamp": "2026-06-11T19:28:32.350721+00:00"
+  },
+  "output_data": {
+    "final_verdict": "ESCALATE",
+    "recommendation": "R0 ESCALATE: Material issues found: (1) Clashing liability caps create ambiguity on data breach liability. (2) Missing DPA violates NY SHIELD Act. (3) Auto-renewal notice period is 90 days, not 30 as stated. Do not execute without legal review. Escalate to chief compliance counsel."
+  },
+  "sandbox_replay_hash": "chp-sandbox-legal::lg-a1b2c3d4::lg-e5f6g7h8::lg-i9j0k1l2::lg-m3n4o5p6::lg-q7r8s9t0",
+  "sandbox_replay_log": [
+    {
+      "step": 1,
+      "action": "load_contract_text",
+      "hash": "lg-a1b2c3d4",
+      "status": "verified"
+    },
+    {
+      "step": 2,
+      "action": "cross_reference_clauses",
+      "hash": "lg-e5f6g7h8",
+      "status": "verified"
+    },
+    {
+      "step": 3,
+      "action": "check_regulatory_compliance",
+      "hash": "lg-i9j0k1l2",
+      "status": "verified"
+    },
+    {
+      "step": 4,
+      "action": "determine_lock_state",
+      "hash": "lg-m3n4o5p6",
+      "status": "verified"
+    },
+    {
+      "step": 5,
+      "action": "record_recommendation",
+      "hash": "lg-q7r8s9t0",
+      "status": "verified"
+    }
+  ]
+}

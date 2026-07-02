@@ -1,0 +1,93 @@
+{
+  "decision_id": "chp-healthcare-20260611-192832",
+  "title": "Clinical Trial Budget Reallocation \u2014 Phase 2 Oncology ($1.5M)",
+  "input_data": {
+    "trial_id": "ONC-P2-2024-047",
+    "phase": "Phase 2",
+    "indication": "Metastatic melanoma",
+    "current_budget": 12000000,
+    "reallocation_amount": 1500000,
+    "from_area": "Patient recruitment (enrollment below target)",
+    "to_area": "Biomarker sequencing (higher than anticipated volume)",
+    "enrolled_patients": 87,
+    "target_patients": 120,
+    "projected_completion": "2026-09"
+  },
+  "lock_state": "PROVISIONAL_LOCK",
+  "foundation": {
+    "agent_id": "clinical-ops-analyzer-v1",
+    "claim": "Reallocate $1.5M from patient recruitment to biomarker sequencing. Enrollment at 87/120 (72.5%) with 3 months remaining \u2014 recruitment budget is underspent. Sequencing costs exceed projections by 40% due to expanded biomarker panel.",
+    "sources": [
+      "Site enrollment reports (aggregated, dated 2026-04-15)",
+      "IRB approval #ONC-IRB-2024-089 (approved 2024-11, 12-month term)",
+      "Sequencing vendor invoice history (2026-Q1)",
+      "Sponsor budget guidelines \u2014 per-patient cost estimates",
+      "ClinicalTrials.gov listing NCT-047-ONC (protocol version 3.2)"
+    ],
+    "reasoning_chain": [
+      "Step 1: Enrollment at 87/120 = 72.5%, below the 80% threshold for 3 months out",
+      "Step 2: Recruitment spend is tracking 25% under budget due to slower enrollment",
+      "Step 3: Sequencing costs are 40% over budget from expanded panel requirements",
+      "Step 4: Reallocation of $1.5M from recruitment to sequencing balances both line items",
+      "Step 5: IRB approval valid through 2025-11 \u2014 no regulatory blocker"
+    ],
+    "confidence": 0.85,
+    "timestamp": "2026-06-11T19:28:32.303302+00:00"
+  },
+  "attack": {
+    "agent_id": "adversary-chp",
+    "vulnerability": "IRB approval #ONC-IRB-2024-089 has a 12-month term ending November 2025. It is now June 2026 \u2014 the approval expired 7 months ago. Enrollment reports are from April 2026 and do not reflect May-June site activity. The trial protocol (v3.2) was amended in February 2026 to add a new biomarker panel \u2014 the IRB never reviewed this amendment. No evidence that sites received the protocol amendment.",
+    "severity": 0.91,
+    "evidence": "IRB expiry: November 2025 vs current June 2026 (7 months expired). Protocol amendment v3.2 approved by sponsor Feb 2026 but IRB approval letter shows no amendment review. Enrollment data staleness: 60+ days old. Under 21 CFR 312.66, expired IRB approval means all enrollment since Nov 2025 may be non-compliant.",
+    "recommendation": "R0 ESCALATE: IRB approval has expired. All enrollment since November 2025 is potentially non-compliant with 21 CFR 312. Protocol amendment v3.2 was never IRB-reviewed. Escalate to clinical compliance officer immediately. Halt any budget action until regulatory status is confirmed."
+  },
+  "gate_result": {
+    "passed": false,
+    "verdict": "ESCALATE",
+    "discrepancies": [
+      "IRB approval expired: 12-month term ended November 2025, current date is June 2026",
+      "Protocol amendment v3.2 (Feb 2026) not reviewed by IRB",
+      "Enrollment data stale: 60+ days old, May-June activity not reflected",
+      "Regulatory risk: enrollment under expired IRB may violate 21 CFR 312.66"
+    ],
+    "adjusted_confidence": 0.39499999999999996,
+    "timestamp": "2026-06-11T19:28:32.303324+00:00"
+  },
+  "output_data": {
+    "final_verdict": "ESCALATE",
+    "recommendation": "R0 ESCALATE: IRB approval has expired. All enrollment since November 2025 is potentially non-compliant with 21 CFR 312. Protocol amendment v3.2 was never IRB-reviewed. Escalate to clinical compliance officer immediately. Halt any budget action until regulatory status is confirmed."
+  },
+  "sandbox_replay_hash": "chp-sandbox-healthcare::hc-a1b2c3d4::hc-e5f6g7h8::hc-i9j0k1l2::hc-m3n4o5p6::hc-q7r8s9t0",
+  "sandbox_replay_log": [
+    {
+      "step": 1,
+      "action": "load_foundation",
+      "hash": "hc-a1b2c3d4",
+      "status": "verified"
+    },
+    {
+      "step": 2,
+      "action": "apply_adversarial_probe",
+      "hash": "hc-e5f6g7h8",
+      "status": "verified"
+    },
+    {
+      "step": 3,
+      "action": "check_regulatory_compliance",
+      "hash": "hc-i9j0k1l2",
+      "status": "verified"
+    },
+    {
+      "step": 4,
+      "action": "determine_lock_state",
+      "hash": "hc-m3n4o5p6",
+      "status": "verified"
+    },
+    {
+      "step": 5,
+      "action": "record_decision",
+      "hash": "hc-q7r8s9t0",
+      "status": "verified"
+    }
+  ]
+}

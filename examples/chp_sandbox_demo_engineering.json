@@ -1,0 +1,105 @@
+{
+  "decision_id": "chp-engineering-20260611-192832",
+  "title": "Database Migration: PostgreSQL \u2192 VectorDB-X (2TB, Production)",
+  "input_data": {
+    "source": "PostgreSQL 15 (production, 2TB, ~500M rows)",
+    "target": "VectorDB-X v3.2 (new cluster, 4 nodes)",
+    "data_types": [
+      "user_profiles",
+      "product_embeddings",
+      "search_index",
+      "analytics_events"
+    ],
+    "estimated_downtime_minutes": 45,
+    "migration_tool": "pg2vectool v1.0 (custom, built in-house)",
+    "rollback_plan": "pg_dump backup taken before migration, restore if migration fails",
+    "security_review_status": "not scheduled",
+    "dry_run_status": "not performed",
+    "team_approvals": [
+      "engineering-lead",
+      "product-manager"
+    ],
+    "missing_approvals": [
+      "security-team",
+      "database-architect"
+    ]
+  },
+  "lock_state": "PROVISIONAL_LOCK",
+  "foundation": {
+    "agent_id": "infra-migration-analyzer-v1",
+    "claim": "PostgreSQL to VectorDB-X migration is safe to proceed. The 2TB dataset migrates in ~45 minutes with pg2vectool. Rollback is available via pg_dump restore. Engineering lead and product manager have approved.",
+    "sources": [
+      "VectorDB-X documentation: migration throughput benchmarks (150MB/s)",
+      "pg2vectool v1.0 test results (dev environment, 50GB subset)",
+      "Engineering architecture review meeting notes (2026-05-20)",
+      "Load testing report: VectorDB-X query latency vs PostgreSQL",
+      "pg_dump backup manifest (nightly, compressed)"
+    ],
+    "reasoning_chain": [
+      "Step 1: VectorDB-X benchmarks show >150MB/s throughput \u2192 2TB migrates in <4 hours",
+      "Step 2: pg2vectool tested on 50GB dev subset \u2014 no data loss or corruption",
+      "Step 3: Engineering lead and PM approved \u2014 team is aligned",
+      "Step 4: Nightly pg_dump provides rollback capability",
+      "Step 5: Recommend proceeding with migration during maintenance window"
+    ],
+    "confidence": 0.83,
+    "timestamp": "2026-06-11T19:28:32.394137+00:00"
+  },
+  "attack": {
+    "agent_id": "adversary-chp",
+    "vulnerability": "NO SECURITY REVIEW: The migration moves 2TB of user profiles (including PII) and product embeddings to a new database system. Security team has not reviewed VectorDB-X's encryption-at-rest, access controls, or data isolation. NO DRY-RUN: pg2vectool was tested on a 50GB dev subset, not the full 2TB. The tool is custom-built and has never migrated anything larger than 50GB. FALSE ROLLBACK: The rollback plan assumes pg_dump backup is restorable, but the backup hasn't been validated in 6 months. A 2TB pg_restore would take 8-12 hours at best \u2014 the stated 45-minute rollback is impossible. Missing database architect approval \u2014 the person most qualified to judge this migration hasn't signed off.",
+    "severity": 0.95,
+    "evidence": "Security review: NOT SCHEDULED \u2014 violates Change Management Policy Section 4.2 (all production data migrations require security sign-off). Dry-run status: NOT PERFORMED \u2014 violates Engineering Runbook Section 3.1 (full dataset dry-run required for any migration >100GB). pg_dump restore test: LAST VALIDATED December 2025 (6+ months stale). Actual restore time for 2TB: estimated 8-12 hours (not 45 min). Missing approval from database architect noted in architecture review notes.",
+    "recommendation": "R0 ESCALATE: Three blocking issues: (1) No security review \u2014 do NOT migrate PII without security sign-off. (2) No production-scale dry-run \u2014 custom tool unproven at 2TB. (3) Rollback plan is fiction \u2014 8-12 hour restore vs claimed 45 minutes. Require: security review, full dry-run with 2TB verified subset, validated restore test, and database architect approval."
+  },
+  "gate_result": {
+    "passed": false,
+    "verdict": "ESCALATE",
+    "discrepancies": [
+      "Security review not scheduled \u2014 violates Change Management Policy \u00a74.2",
+      "No production-scale dry-run performed (custom tool unproven at 2TB)",
+      "Rollback plan unverified: pg_dump restore not tested in 6+ months",
+      "Rollback time estimate wrong: 45 min claimed vs actual 8-12 hours",
+      "Missing database architect approval \u2014 critical stakeholder not consulted"
+    ],
+    "adjusted_confidence": 0.355,
+    "timestamp": "2026-06-11T19:28:32.394158+00:00"
+  },
+  "output_data": {
+    "final_verdict": "ESCALATE",
+    "recommendation": "R0 ESCALATE: Three blocking issues: (1) No security review \u2014 do NOT migrate PII without security sign-off. (2) No production-scale dry-run \u2014 custom tool unproven at 2TB. (3) Rollback plan is fiction \u2014 8-12 hour restore vs claimed 45 minutes. Require: security review, full dry-run with 2TB verified subset, validated restore test, and database architect approval."
+  },
+  "sandbox_replay_hash": "chp-sandbox-engineering::en-a1b2c3d4::en-e5f6g7h8::en-i9j0k1l2::en-m3n4o5p6::en-q7r8s9t0",
+  "sandbox_replay_log": [
+    {
+      "step": 1,
+      "action": "load_migration_plan",
+      "hash": "en-a1b2c3d4",
+      "status": "verified"
+    },
+    {
+      "step": 2,
+      "action": "validate_security_reviews",
+      "hash": "en-e5f6g7h8",
+      "status": "verified"
+    },
+    {
+      "step": 3,
+      "action": "check_rollback_viability",
+      "hash": "en-i9j0k1l2",
+      "status": "verified"
+    },
+    {
+      "step": 4,
+      "action": "determine_lock_state",
+      "hash": "en-m3n4o5p6",
+      "status": "verified"
+    },
+    {
+      "step": 5,
+      "action": "record_decision",
+      "hash": "en-q7r8s9t0",
+      "status": "verified"
+    }
+  ]
+}

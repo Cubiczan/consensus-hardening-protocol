@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHP Sandbox Demo — Compliance Chain Audit</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d1117; color: #c9d1d9; padding: 20px; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 { color: #58a6ff; margin-bottom: 8px; font-size: 28px; }
+  .subtitle { color: #8b949e; margin-bottom: 24px; font-size: 14px; }
+  .summary-bar { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+  .summary-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; flex: 1; min-width: 140px; }
+  .summary-card h3 { color: #8b949e; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .summary-card .value { color: #f0f6fc; font-size: 24px; font-weight: 600; margin-top: 4px; }
+  .scenario-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+  .state-pass { border-left: 4px solid #3fb950; }
+  .state-escalate { border-left: 4px solid #d29922; }
+  .state-fail { border-left: 4px solid #f85149; }
+  .card-header { display: flex; align-items: center; gap: 12px; padding: 16px; background: #1c2128; border-bottom: 1px solid #30363d; }
+  .card-header h2 { color: #f0f6fc; font-size: 18px; flex: 1; }
+  .verdict-icon { font-size: 24px; }
+  .badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+  .badge-locked { background: #1b3a2b; color: #3fb950; }
+  .badge-provisional_lock { background: #3d2e00; color: #d29922; }
+  .badge-exploring { background: #3d1115; color: #f85149; }
+  .card-body { padding: 16px; }
+  .section { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #21262d; }
+  .section:last-child { border-bottom: none; margin-bottom: 0; }
+  .section h3 { color: #58a6ff; font-size: 14px; margin-bottom: 8px; }
+  .section p { margin-bottom: 4px; line-height: 1.6; }
+  .section ul { margin: 4px 0 0 20px; }
+  .section ul li { margin-bottom: 2px; }
+  .verdict-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 13px; }
+  .verdict-pass { background: #1b3a2b; color: #3fb950; }
+  .verdict-fail { background: #3d1115; color: #f85149; }
+  .verdict-escalate { background: #3d2e00; color: #d29922; }
+  .replay-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .replay-table th { text-align: left; padding: 8px; background: #1c2128; color: #8b949e; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid #30363d; }
+  .replay-table td { padding: 8px; font-size: 13px; border-bottom: 1px solid #21262d; }
+  .replay-table code { background: #1c2128; padding: 2px 6px; border-radius: 3px; font-size: 12px; color: #8b949e; }
+  .status-verified { color: #3fb950; }
+  code { background: #1c2128; padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+  .footer { text-align: center; color: #484f58; font-size: 12px; margin-top: 40px; padding: 20px; border-top: 1px solid #21262d; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🛡️ CHP Sandbox Demo</h1>
+  <p class="subtitle">Compliance Chain: Foundation Disclosure → Attack → R0 Gate → Lock → Sandbox Replay</p>
+
+  <div class="summary-bar">
+    <div class="summary-card">
+      <h3>Scenarios</h3>
+      <div class="value">2</div>
+    </div>
+    <div class="summary-card">
+      <h3>R0 PASS</h3>
+      <div class="value" style="color:#3fb950">0</div>
+    </div>
+    <div class="summary-card">
+      <h3>R0 ESCALATE</h3>
+      <div class="value" style="color:#d29922">2</div>
+    </div>
+    <div class="summary-card">
+      <h3>R0 FAIL</h3>
+      <div class="value" style="color:#f85149">0</div>
+    </div>
+    <div class="summary-card">
+      <h3>Generated</h3>
+      <div class="value" style="font-size:14px">2026-06-11 19:28 UTC</div>
+    </div>
+  </div>
+
+  
+        <div class="scenario-card state-provisional_lock">
+            <div class="card-header">
+                <span class="verdict-icon">⚠️</span>
+                <h2>Capital Reallocation Decision — $2M</h2>
+                <span class="badge badge-provisional_lock">PROVISIONAL_LOCK</span>
+            </div>
+            <div class="card-body">
+                <div class="section">
+                    <h3>📋 Foundation Disclosure</h3>
+                    <p><strong>Agent:</strong> finance-analyzer-v1</p>
+                    <p><strong>Claim:</strong> Revenue shortfall of 5.56% requires expense rebalancing: reduce R&D by $2M, increase Sales by $2M</p>
+                    <p><strong>Sources:</strong></p>
+                    <ul><li>Acme Corp Q1 2026 P&L (pre-audit)</li><li>Sales pipeline report (CRM, fetched 2026-04-01)</li><li>Industry benchmark: SaaS companies target <5% rev variance</li></ul>
+                    <p><strong>Confidence:</strong> 87%</p>
+                </div>
+                <div class="section">
+                    <h3>⚔️ Foundation Attack</h3>
+                    <p><strong>Agent:</strong> adversary-chp</p>
+                    <p><strong>Vulnerability Found:</strong> Foundation data pre-dates Q1 close. The 'pre-audit' P&L was superseded by final audited figures showing only 2.1% variance. The CRM pipeline report was also stale (90-day old pipeline data). The agent's confidence (0.87) is unsupported given stale source data.</p>
+                    <p><strong>Severity:</strong> 92%</p>
+                    <p><strong>Evidence:</strong> Comparing pre-audit ($42.5M) vs final audited ($44.05M) revenue. Stale CRM data reduces pipeline accuracy by ~40%. The 5.56% variance drops to 2.1% with final data — below the 3% rebalancing threshold.</p>
+                </div>
+                <div class="section">
+                    <h3>🚧 R0 Gate Result</h3>
+                    <p><strong>Verdict:</strong> <span class="verdict-tag verdict-escalate">ESCALATE</span></p>
+                    <p><strong>Adjusted Confidence:</strong> 41%</p>
+                    <ul><li>🔴 Source data staleness: pre-audit figures superseded by final audited</li><li>🔴 Reference mismatch: product grade or scope differs from claim</li><li>🔴 Price benchmark out of date: market conditions have shifted</li></ul>
+                    <p><strong>Recommendation:</strong> R0 ESCALATE: Require refreshed source data before any decision. Mark foundation as 'STALE — requires re-validation'.</p>
+                </div>
+                <div class="section">
+                    <h3>🔒 Lock State & Sandbox Replay</h3>
+                    <p><strong>Final Lock:</strong> PROVISIONAL_LOCK</p>
+                    <p><strong>Replay Hash:</strong> <code>chp-sandbox-v2::a1b2c3d4::e5f6g7h8::i9j0k1l2::m3n4o5p6::q7r8...</code></p>
+                    <table class="replay-table">
+                        <tr><th>Step</th><th>Action</th><th>Hash</th><th>Status</th></tr>
+                        <tr><td>1</td><td>load_foundation</td><td><code>a1b2c3d4</code></td><td class="status-verified">verified</td></tr><tr><td>2</td><td>apply_adversarial_probe</td><td><code>e5f6g7h8</code></td><td class="status-verified">verified</td></tr><tr><td>3</td><td>evaluate_gate</td><td><code>i9j0k1l2</code></td><td class="status-verified">verified</td></tr><tr><td>4</td><td>determine_lock_state</td><td><code>m3n4o5p6</code></td><td class="status-verified">verified</td></tr><tr><td>5</td><td>record_decision</td><td><code>q7r8s9t0</code></td><td class="status-verified">verified</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="scenario-card state-provisional_lock">
+            <div class="card-header">
+                <span class="verdict-icon">⚠️</span>
+                <h2>Lithium Hydroxide Supplier Approval</h2>
+                <span class="badge badge-provisional_lock">PROVISIONAL_LOCK</span>
+            </div>
+            <div class="card-body">
+                <div class="section">
+                    <h3>📋 Foundation Disclosure</h3>
+                    <p><strong>Agent:</strong> supply-chain-analyzer-v1</p>
+                    <p><strong>Claim:</strong> GreenLithium Extractions Ltd meets all supplier qualification criteria for a 500-tonne lithium hydroxide contract</p>
+                    <p><strong>Sources:</strong></p>
+                    <ul><li>GreenLithium ESG report 2025</li><li>Due diligence questionnaire (completed 2025-11)</li><li>Reference check: BatteryCo (300t contract, 2024)</li><li>Price benchmark: Lithium price index (2026-03)</li></ul>
+                    <p><strong>Confidence:</strong> 82%</p>
+                </div>
+                <div class="section">
+                    <h3>⚔️ Foundation Attack</h3>
+                    <p><strong>Agent:</strong> adversary-chp</p>
+                    <p><strong>Vulnerability Found:</strong> The ESG report and DDQ are both >6 months old. GreenLithium was cited for water rights violations in Jan 2026 (Chilean environmental regulator). No current audit certificate. The reference from BatteryCo was for a different product grade (technical-grade, not battery-grade). Price benchmark from 2026-03 does not reflect the April 2026 lithium price spike.</p>
+                    <p><strong>Severity:</strong> 88%</p>
+                    <p><strong>Evidence:</strong> Water rights citation: Chilean SMA Resolution 2026-017. DDQ expiry: November 2025. Product grade mismatch: BatteryCo purchased Li₂CO₃ (technical), not LiOH (battery-grade). Price index as of 2026-05: $16,800/t (+18%).</p>
+                </div>
+                <div class="section">
+                    <h3>🚧 R0 Gate Result</h3>
+                    <p><strong>Verdict:</strong> <span class="verdict-tag verdict-escalate">ESCALATE</span></p>
+                    <p><strong>Adjusted Confidence:</strong> 38%</p>
+                    <ul><li>🔴 Source data staleness: pre-audit figures superseded by final audited</li><li>🔴 Reference mismatch: product grade or scope differs from claim</li><li>🔴 Price benchmark out of date: market conditions have shifted</li></ul>
+                    <p><strong>Recommendation:</strong> R0 FAIL: Supplier due diligence is stale. Require updated ESG audit (post-Jan 2026), current DDQ, and revised pricing. Escalate for human review.</p>
+                </div>
+                <div class="section">
+                    <h3>🔒 Lock State & Sandbox Replay</h3>
+                    <p><strong>Final Lock:</strong> PROVISIONAL_LOCK</p>
+                    <p><strong>Replay Hash:</strong> <code>chp-sandbox-v2::a1b2c3d4::e5f6g7h8::i9j0k1l2::m3n4o5p6::q7r8...</code></p>
+                    <table class="replay-table">
+                        <tr><th>Step</th><th>Action</th><th>Hash</th><th>Status</th></tr>
+                        <tr><td>1</td><td>load_foundation</td><td><code>a1b2c3d4</code></td><td class="status-verified">verified</td></tr><tr><td>2</td><td>apply_adversarial_probe</td><td><code>e5f6g7h8</code></td><td class="status-verified">verified</td></tr><tr><td>3</td><td>evaluate_gate</td><td><code>i9j0k1l2</code></td><td class="status-verified">verified</td></tr><tr><td>4</td><td>determine_lock_state</td><td><code>m3n4o5p6</code></td><td class="status-verified">verified</td></tr><tr><td>5</td><td>record_decision</td><td><code>q7r8s9t0</code></td><td class="status-verified">verified</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+  <div class="footer">
+    <p>Consensus Hardening Protocol — Sandbox Demo Kit v2.0</p>
+    <p>Run: <code>python3 examples/chp_sandbox_demo.py</code> → produces this report</p>
+  </div>
+</div>
+</body>
+</html>

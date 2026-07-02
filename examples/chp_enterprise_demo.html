@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHP Enterprise Demo — All Verticals</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d1117; color: #c9d1d9; padding: 20px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { color: #58a6ff; margin-bottom: 8px; font-size: 28px; }
+  .subtitle { color: #8b949e; margin-bottom: 24px; font-size: 14px; }
+  .summary-bar { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+  .summary-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; flex: 1; min-width: 140px; }
+  .summary-card h3 { color: #8b949e; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .summary-card .value { color: #f0f6fc; font-size: 24px; font-weight: 600; margin-top: 4px; }
+  .scenario-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+  .state-pass { border-left: 4px solid #3fb950; }
+  .state-provisional_lock { border-left: 4px solid #d29922; }
+  .state-pending { border-left: 4px solid #f85149; }
+  .card-header { display: flex; align-items: center; gap: 12px; padding: 16px; background: #1c2128; border-bottom: 1px solid #30363d; flex-wrap: wrap; }
+  .card-header h2 { color: #f0f6fc; font-size: 16px; flex: 1; min-width: 200px; }
+  .verdict-icon { font-size: 24px; }
+  .vertical-badge { background: #1c2128; padding: 4px 10px; border-radius: 12px; font-size: 13px; color: #58a6ff; font-weight: 600; }
+  .badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+  .badge-locked { background: #1b3a2b; color: #3fb950; }
+  .badge-provisional_lock { background: #3d2e00; color: #d29922; }
+  .badge-exploring { background: #3d1115; color: #f85149; }
+  .card-body { padding: 16px; }
+  .section { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #21262d; }
+  .section:last-child { border-bottom: none; margin-bottom: 0; }
+  .section h3 { color: #58a6ff; font-size: 14px; margin-bottom: 6px; }
+  .section p { margin-bottom: 3px; line-height: 1.5; font-size: 13px; }
+  .section ul { margin: 4px 0 0 20px; }
+  .section ul li { margin-bottom: 2px; font-size: 13px; }
+  .verdict-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 12px; }
+  .verdict-pass { background: #1b3a2b; color: #3fb950; }
+  .verdict-fail { background: #3d1115; color: #f85149; }
+  .verdict-escalate { background: #3d2e00; color: #d29922; }
+  .replay-table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 12px; }
+  .replay-table th { text-align: left; padding: 6px; background: #1c2128; color: #8b949e; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #30363d; }
+  .replay-table td { padding: 6px; border-bottom: 1px solid #21262d; }
+  .replay-table code { background: #1c2128; padding: 1px 4px; border-radius: 3px; font-size: 11px; }
+  .status-verified { color: #3fb950; }
+  code { background: #1c2128; padding: 2px 6px; border-radius: 3px; font-size: 11px; }
+  .footer { text-align: center; color: #484f58; font-size: 12px; margin-top: 40px; padding: 20px; border-top: 1px solid #21262d; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🛡️ CHP Enterprise Demo Suite</h1>
+  <p class="subtitle">5 Scenarios · 4 Verticals · Full Compliance Chain</p>
+
+  <div class="summary-bar">
+    <div class="summary-card"><h3>Scenarios</h3><div class="value">5</div></div>
+    <div class="summary-card"><h3>Verticals</h3><div class="value">4</div></div>
+    <div class="summary-card"><h3>R0 ESCALATE</h3><div class="value" style="color:#d29922">5</div></div>
+    <div class="summary-card"><h3>R0 FAIL</h3><div class="value" style="color:#f85149">0</div></div>
+    <div class="summary-card"><h3>R0 PASS</h3><div class="value" style="color:#3fb950">0</div></div>
+    <div class="summary-card"><h3>Generated</h3><div class="value" style="font-size:14px">2026-06-11 19:28 UTC</div></div>
+  </div>
+
+  
+            <div class="scenario-card state-provisional-lock">
+                <div class="card-header">
+                    <span class="verdict-icon">⚠️</span>
+                    <span class="vertical-badge">💰 Finance</span>
+                    <h2>Capital Reallocation Decision — $2M</h2>
+                    <span class="badge badge-provisional-lock">PROVISIONAL_LOCK</span>
+                </div>
+                <div class="card-body">
+                    <div class="section">
+                        <h3>📋 Foundation Disclosure</h3>
+                        <p><strong>Agent:</strong> finance-analyzer-v1</p>
+                        <p><strong>Claim:</strong> Revenue shortfall of 5.56% requires expense rebalancing: reduce R&D by $2M, increase Sales by $2M</p>
+                        <p><strong>Confidence:</strong> 87%</p>
+                    </div>
+                    <div class="section">
+                        <h3>⚔️ Foundation Attack</h3>
+                        <p><strong>Vulnerability:</strong> Foundation data pre-dates Q1 close. The 'pre-audit' P&L was superseded by final audited figures showing only 2.1% varian</p>
+                        <p><strong>Severity:</strong> 92%</p>
+                    </div>
+                    <div class="section">
+                        <h3>🚧 R0 Gate</h3>
+                        <p><strong>Verdict:</strong> <span class="verdict-tag verdict-escalate">ESCALATE</span></p>
+                        <p><strong>Adjusted Confidence:</strong> 41%</p>
+                        <ul><li>🔴 Source data staleness: pre-audit figures superseded by final audited</li><li>🔴 Reference mismatch: product grade or scope differs from claim</li><li>🔴 Price benchmark out of date: market conditions have shifted</li></ul>
+                    </div>
+                    <div class="section">
+                        <h3>🔒 Sandbox Replay</h3>
+                        <p><strong>Hash:</strong> <code>chp-sandbox-v2::a1b2c3d4::e5f6g7h8::i9j0k1l2::m3n4...</code></p>
+                        <table class="replay-table">
+                            <tr><th>Step</th><th>Action</th><th>Hash</th><th>Status</th></tr>
+                            <tr><td>1</td><td>load_foundation</td><td><code>a1b2c3d4</code></td><td class="status-verified">verified</td></tr><tr><td>2</td><td>apply_adversarial_probe</td><td><code>e5f6g7h8</code></td><td class="status-verified">verified</td></tr><tr><td>3</td><td>evaluate_gate</td><td><code>i9j0k1l2</code></td><td class="status-verified">verified</td></tr><tr><td>4</td><td>determine_lock_state</td><td><code>m3n4o5p6</code></td><td class="status-verified">verified</td></tr><tr><td>5</td><td>record_decision</td><td><code>q7r8s9t0</code></td><td class="status-verified">verified</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="scenario-card state-provisional-lock">
+                <div class="card-header">
+                    <span class="verdict-icon">⚠️</span>
+                    <span class="vertical-badge">💰 Finance</span>
+                    <h2>Lithium Hydroxide Supplier Approval</h2>
+                    <span class="badge badge-provisional-lock">PROVISIONAL_LOCK</span>
+                </div>
+                <div class="card-body">
+                    <div class="section">
+                        <h3>📋 Foundation Disclosure</h3>
+                        <p><strong>Agent:</strong> supply-chain-analyzer-v1</p>
+                        <p><strong>Claim:</strong> GreenLithium Extractions Ltd meets all supplier qualification criteria for a 500-tonne lithium hydroxide contract</p>
+                        <p><strong>Confidence:</strong> 82%</p>
+                    </div>
+                    <div class="section">
+                        <h3>⚔️ Foundation Attack</h3>
+                        <p><strong>Vulnerability:</strong> The ESG report and DDQ are both >6 months old. GreenLithium was cited for water rights violations in Jan 2026 (Chilean e</p>
+                        <p><strong>Severity:</strong> 88%</p>
+                    </div>
+                    <div class="section">
+                        <h3>🚧 R0 Gate</h3>
+                        <p><strong>Verdict:</strong> <span class="verdict-tag verdict-escalate">ESCALATE</span></p>
+                        <p><strong>Adjusted Confidence:</strong> 38%</p>
+                        <ul><li>🔴 Source data staleness: pre-audit figures superseded by final audited</li><li>🔴 Reference mismatch: product grade or scope differs from claim</li><li>🔴 Price benchmark out of date: market conditions have shifted</li></ul>
+                    </div>
+                    <div class="section">
+                        <h3>🔒 Sandbox Replay</h3>
+                        <p><strong>Hash:</strong> <code>chp-sandbox-v2::a1b2c3d4::e5f6g7h8::i9j0k1l2::m3n4...</code></p>
+                        <table class="replay-table">
+                            <tr><th>Step</th><th>Action</th><th>Hash</th><th>Status</th></tr>
+                            <tr><td>1</td><td>load_foundation</td><td><code>a1b2c3d4</code></td><td class="status-verified">verified</td></tr><tr><td>2</td><td>apply_adversarial_probe</td><td><code>e5f6g7h8</code></td><td class="status-verified">verified</td></tr><tr><td>3</td><td>evaluate_gate</td><td><code>i9j0k1l2</code></td><td class="status-verified">verified</td></tr><tr><td>4</td><td>determine_lock_state</td><td><code>m3n4o5p6</code></td><td class="status-verified">verified</td></tr><tr><td>5</td><td>record_decision</td><td><code>q7r8s9t0</code></td><td class="status-verified">verified</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="scenario-card state-provisional-lock">
+                <div class="card-header">
+                    <span class="verdict-icon">⚠️</span>
+                    <span class="vertical-badge">🏥 Healthcare</span>
+                    <h2>Clinical Trial Budget Reallocation — Phase 2 Oncology ($1.5M)</h2>
+                    <span class="badge badge-provisional-lock">PROVISIONAL_LOCK</span>
+                </div>
+                <div class="card-body">
+                    <div class="section">
+                        <h3>📋 Foundation Disclosure</h3>
+                        <p><strong>Agent:</strong> clinical-ops-analyzer-v1</p>
+                        <p><strong>Claim:</strong> Reallocate $1.5M from patient recruitment to biomarker sequencing. Enrollment at 87/120 (72.5%) with 3 months remaining </p>
+                        <p><strong>Confidence:</strong> 85%</p>
+                    </div>
+                    <div class="section">
+                        <h3>⚔️ Foundation Attack</h3>
+                        <p><strong>Vulnerability:</strong> IRB approval #ONC-IRB-2024-089 has a 12-month term ending November 2025. It is now June 2026 — the approval expired 7 mo</p>
+                        <p><strong>Severity:</strong> 91%</p>
+                    </div>
+                    <div class="section">
+                        <h3>🚧 R0 Gate</h3>
+                        <p><strong>Verdict:</strong> <span class="verdict-tag verdict-escalate">ESCALATE</span></p>
+                        <p><strong>Adjusted Confidence:</strong> 39%</p>
+                        <ul><li>🔴 IRB approval expired: 12-month term ended November 2025, current date is June 2026</li><li>🔴 Protocol amendment v3.2 (Feb 2026) not reviewed by IRB</li><li>🔴 Enrollment data stale: 60+ days old, May-June activity not reflected</li></ul>
+                    </div>
+                    <div class="section">
+                        <h3>🔒 Sandbox Replay</h3>
+                        <p><strong>Hash:</strong> <code>chp-sandbox-healthcare::hc-a1b2c3d4::hc-e5f6g7h8::...</code></p>
+                        <table class="replay-table">
+                            <tr><th>Step</th><th>Action</th><th>Hash</th><th>Status</th></tr>
+                            <tr><td>1</td><td>load_foundation</td><td><code>hc-a1b2c3d4</code></td><td class="status-verified">verified</td></tr><tr><td>2</td><td>apply_adversarial_probe</td><td><code>hc-e5f6g7h8</code></td><td class="status-verified">verified</td></tr><tr><td>3</td><td>check_regulatory_compliance</td><td><code>hc-i9j0k1l2</code></td><td class="status-verified">verified</td></tr><tr><td>4</td><td>determine_lock_state</td><td><code>hc-m3n4o5p6</code></td><td class="status-verified">verified</td></tr><tr><td>5</td><td>record_decision</td><td><code>hc-q7r8s9t0</code></td><td class="status-verified">verified</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="scenario-card state-provisional-lock">
+                <div class="card-header">
+                    <span class="verdict-icon">⚠️</span>
+                    <span class="vertical-badge">⚖️ Legal</span>
+                    <h2>SaaS Master Services Agreement — DataVault Inc. ($240K ACV)</h2>
+                    <span class="badge badge-provisional-lock">PROVISIONAL_LOCK</span>
+                </div>
+                <div class="card-body">
+                    <div class="section">
+                        <h3>📋 Foundation Disclosure</h3>
+                        <p><strong>Agent:</strong> contract-reviewer-v1</p>
+                        <p><strong>Claim:</strong> DataVault Inc. MSA is standard SaaS terms with acceptable liability cap of $500K and 30-day termination notice. Recommen</p>
+                        <p><strong>Confidence:</strong> 79%</p>
+                    </div>
+                    <div class="section">
+                        <h3>⚔️ Foundation Attack</h3>
+                        <p><strong>Vulnerability:</strong> The MSA has a CLASHING LIABILITY STRUCTURE: Section 8.1(a) caps general liability at $500K, but Section 8.4 caps data br</p>
+                        <p><strong>Severity:</strong> 89%</p>
+                    </div>
+                    <div class="section">
+                        <h3>🚧 R0 Gate</h3>
+                        <p><strong>Verdict:</strong> <span class="verdict-tag verdict-escalate">ESCALATE</span></p>
+                        <p><strong>Adjusted Confidence:</strong> 34%</p>
+                        <ul><li>🔴 Clashing liability caps: $500K general vs ~$240K data breach (Section 8.1 vs 8.4)</li><li>🔴 Missing Data Processing Addendum — violates NY SHIELD Act requirements</li><li>🔴 Auto-renewal notice period is 90 days, not 30 days as stated (Section 10.3)</li></ul>
+                    </div>
+                    <div class="section">
+                        <h3>🔒 Sandbox Replay</h3>
+                        <p><strong>Hash:</strong> <code>chp-sandbox-legal::lg-a1b2c3d4::lg-e5f6g7h8::lg-i9...</code></p>
+                        <table class="replay-table">
+                            <tr><th>Step</th><th>Action</th><th>Hash</th><th>Status</th></tr>
+                            <tr><td>1</td><td>load_contract_text</td><td><code>lg-a1b2c3d4</code></td><td class="status-verified">verified</td></tr><tr><td>2</td><td>cross_reference_clauses</td><td><code>lg-e5f6g7h8</code></td><td class="status-verified">verified</td></tr><tr><td>3</td><td>check_regulatory_compliance</td><td><code>lg-i9j0k1l2</code></td><td class="status-verified">verified</td></tr><tr><td>4</td><td>determine_lock_state</td><td><code>lg-m3n4o5p6</code></td><td class="status-verified">verified</td></tr><tr><td>5</td><td>record_recommendation</td><td><code>lg-q7r8s9t0</code></td><td class="status-verified">verified</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="scenario-card state-provisional-lock">
+                <div class="card-header">
+                    <span class="verdict-icon">⚠️</span>
+                    <span class="vertical-badge">🔧 Engineering</span>
+                    <h2>Database Migration: PostgreSQL → VectorDB-X (2TB, Production)</h2>
+                    <span class="badge badge-provisional-lock">PROVISIONAL_LOCK</span>
+                </div>
+                <div class="card-body">
+                    <div class="section">
+                        <h3>📋 Foundation Disclosure</h3>
+                        <p><strong>Agent:</strong> infra-migration-analyzer-v1</p>
+                        <p><strong>Claim:</strong> PostgreSQL to VectorDB-X migration is safe to proceed. The 2TB dataset migrates in ~45 minutes with pg2vectool. Rollback</p>
+                        <p><strong>Confidence:</strong> 83%</p>
+                    </div>
+                    <div class="section">
+                        <h3>⚔️ Foundation Attack</h3>
+                        <p><strong>Vulnerability:</strong> NO SECURITY REVIEW: The migration moves 2TB of user profiles (including PII) and product embeddings to a new database sy</p>
+                        <p><strong>Severity:</strong> 95%</p>
+                    </div>
+                    <div class="section">
+                        <h3>🚧 R0 Gate</h3>
+                        <p><strong>Verdict:</strong> <span class="verdict-tag verdict-escalate">ESCALATE</span></p>
+                        <p><strong>Adjusted Confidence:</strong> 36%</p>
+                        <ul><li>🔴 Security review not scheduled — violates Change Management Policy §4.2</li><li>🔴 No production-scale dry-run performed (custom tool unproven at 2TB)</li><li>🔴 Rollback plan unverified: pg_dump restore not tested in 6+ months</li></ul>
+                    </div>
+                    <div class="section">
+                        <h3>🔒 Sandbox Replay</h3>
+                        <p><strong>Hash:</strong> <code>chp-sandbox-engineering::en-a1b2c3d4::en-e5f6g7h8:...</code></p>
+                        <table class="replay-table">
+                            <tr><th>Step</th><th>Action</th><th>Hash</th><th>Status</th></tr>
+                            <tr><td>1</td><td>load_migration_plan</td><td><code>en-a1b2c3d4</code></td><td class="status-verified">verified</td></tr><tr><td>2</td><td>validate_security_reviews</td><td><code>en-e5f6g7h8</code></td><td class="status-verified">verified</td></tr><tr><td>3</td><td>check_rollback_viability</td><td><code>en-i9j0k1l2</code></td><td class="status-verified">verified</td></tr><tr><td>4</td><td>determine_lock_state</td><td><code>en-m3n4o5p6</code></td><td class="status-verified">verified</td></tr><tr><td>5</td><td>record_decision</td><td><code>en-q7r8s9t0</code></td><td class="status-verified">verified</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+  <div class="footer">
+    <p>Consensus Hardening Protocol — Enterprise Demo Suite v1.0</p>
+    <p>Run: <code>python3 examples/run-all.py</code> → produces this combined report</p>
+  </div>
+</div>
+</body>
+</html>

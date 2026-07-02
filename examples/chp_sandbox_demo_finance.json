@@ -1,0 +1,173 @@
+[
+  {
+    "decision_id": "chp-demo-20260611-192832",
+    "title": "Capital Reallocation Decision \u2014 $2M",
+    "input_data": {
+      "entity": "Acme Corp",
+      "period": "2026-Q1",
+      "actual_revenue": 42500000,
+      "budget_revenue": 45000000,
+      "variance_pct": -5.56,
+      "recommendation": "Reallocate $2M from R&D to Sales based on revenue shortfall"
+    },
+    "lock_state": "PROVISIONAL_LOCK",
+    "foundation": {
+      "agent_id": "finance-analyzer-v1",
+      "claim": "Revenue shortfall of 5.56% requires expense rebalancing: reduce R&D by $2M, increase Sales by $2M",
+      "sources": [
+        "Acme Corp Q1 2026 P&L (pre-audit)",
+        "Sales pipeline report (CRM, fetched 2026-04-01)",
+        "Industry benchmark: SaaS companies target <5% rev variance"
+      ],
+      "reasoning_chain": [
+        "Step 1: Actual revenue of $42.5M is 5.56% below budget of $45M",
+        "Step 2: Shortfall pattern matches underperforming Sales, not R&D",
+        "Step 3: Industry data shows rebalancing reduces strategic variance",
+        "Step 4: Recommend $2M shift from R&D (performing) to Sales (struggling)"
+      ],
+      "confidence": 0.87,
+      "timestamp": "2026-06-11T19:28:32.254241+00:00"
+    },
+    "attack": {
+      "agent_id": "adversary-chp",
+      "vulnerability": "Foundation data pre-dates Q1 close. The 'pre-audit' P&L was superseded by final audited figures showing only 2.1% variance. The CRM pipeline report was also stale (90-day old pipeline data). The agent's confidence (0.87) is unsupported given stale source data.",
+      "severity": 0.92,
+      "evidence": "Comparing pre-audit ($42.5M) vs final audited ($44.05M) revenue. Stale CRM data reduces pipeline accuracy by ~40%. The 5.56% variance drops to 2.1% with final data \u2014 below the 3% rebalancing threshold.",
+      "recommendation": "R0 ESCALATE: Require refreshed source data before any decision. Mark foundation as 'STALE \u2014 requires re-validation'."
+    },
+    "gate_result": {
+      "passed": false,
+      "verdict": "ESCALATE",
+      "discrepancies": [
+        "Source data staleness: pre-audit figures superseded by final audited",
+        "Reference mismatch: product grade or scope differs from claim",
+        "Price benchmark out of date: market conditions have shifted"
+      ],
+      "adjusted_confidence": 0.41,
+      "timestamp": "2026-06-11T19:28:32.254280+00:00"
+    },
+    "output_data": {
+      "final_verdict": "ESCALATE",
+      "recommendation": "R0 ESCALATE: Require refreshed source data before any decision. Mark foundation as 'STALE \u2014 requires re-validation'."
+    },
+    "sandbox_replay_hash": "chp-sandbox-v2::a1b2c3d4::e5f6g7h8::i9j0k1l2::m3n4o5p6::q7r8s9t0",
+    "sandbox_replay_log": [
+      {
+        "step": 1,
+        "action": "load_foundation",
+        "hash": "a1b2c3d4",
+        "status": "verified"
+      },
+      {
+        "step": 2,
+        "action": "apply_adversarial_probe",
+        "hash": "e5f6g7h8",
+        "status": "verified"
+      },
+      {
+        "step": 3,
+        "action": "evaluate_gate",
+        "hash": "i9j0k1l2",
+        "status": "verified"
+      },
+      {
+        "step": 4,
+        "action": "determine_lock_state",
+        "hash": "m3n4o5p6",
+        "status": "verified"
+      },
+      {
+        "step": 5,
+        "action": "record_decision",
+        "hash": "q7r8s9t0",
+        "status": "verified"
+      }
+    ]
+  },
+  {
+    "decision_id": "chp-demo-20260611-192832",
+    "title": "Lithium Hydroxide Supplier Approval",
+    "input_data": {
+      "supplier": "GreenLithium Extractions Ltd",
+      "volume_tonnes": 500,
+      "price_per_tonne": 14200,
+      "total_contract_value": 7100000,
+      "region": "Chile"
+    },
+    "lock_state": "PROVISIONAL_LOCK",
+    "foundation": {
+      "agent_id": "supply-chain-analyzer-v1",
+      "claim": "GreenLithium Extractions Ltd meets all supplier qualification criteria for a 500-tonne lithium hydroxide contract",
+      "sources": [
+        "GreenLithium ESG report 2025",
+        "Due diligence questionnaire (completed 2025-11)",
+        "Reference check: BatteryCo (300t contract, 2024)",
+        "Price benchmark: Lithium price index (2026-03)"
+      ],
+      "reasoning_chain": [
+        "Step 1: ESG report shows compliance with IRMA standards",
+        "Step 2: DDQ indicates adequate quality control processes",
+        "Step 3: Reference from BatteryCo confirms on-time delivery",
+        "Step 4: Price of $14,200/t is within market range ($13,500-$15,000)",
+        "Step 5: Recommend approval with PROVISIONAL_LOCK (90-day review)"
+      ],
+      "confidence": 0.82,
+      "timestamp": "2026-06-11T19:28:32.254312+00:00"
+    },
+    "attack": {
+      "agent_id": "adversary-chp",
+      "vulnerability": "The ESG report and DDQ are both >6 months old. GreenLithium was cited for water rights violations in Jan 2026 (Chilean environmental regulator). No current audit certificate. The reference from BatteryCo was for a different product grade (technical-grade, not battery-grade). Price benchmark from 2026-03 does not reflect the April 2026 lithium price spike.",
+      "severity": 0.88,
+      "evidence": "Water rights citation: Chilean SMA Resolution 2026-017. DDQ expiry: November 2025. Product grade mismatch: BatteryCo purchased Li\u2082CO\u2083 (technical), not LiOH (battery-grade). Price index as of 2026-05: $16,800/t (+18%).",
+      "recommendation": "R0 FAIL: Supplier due diligence is stale. Require updated ESG audit (post-Jan 2026), current DDQ, and revised pricing. Escalate for human review."
+    },
+    "gate_result": {
+      "passed": false,
+      "verdict": "ESCALATE",
+      "discrepancies": [
+        "Source data staleness: pre-audit figures superseded by final audited",
+        "Reference mismatch: product grade or scope differs from claim",
+        "Price benchmark out of date: market conditions have shifted"
+      ],
+      "adjusted_confidence": 0.37999999999999995,
+      "timestamp": "2026-06-11T19:28:32.254323+00:00"
+    },
+    "output_data": {
+      "final_verdict": "ESCALATE",
+      "recommendation": "R0 FAIL: Supplier due diligence is stale. Require updated ESG audit (post-Jan 2026), current DDQ, and revised pricing. Escalate for human review."
+    },
+    "sandbox_replay_hash": "chp-sandbox-v2::a1b2c3d4::e5f6g7h8::i9j0k1l2::m3n4o5p6::q7r8s9t0",
+    "sandbox_replay_log": [
+      {
+        "step": 1,
+        "action": "load_foundation",
+        "hash": "a1b2c3d4",
+        "status": "verified"
+      },
+      {
+        "step": 2,
+        "action": "apply_adversarial_probe",
+        "hash": "e5f6g7h8",
+        "status": "verified"
+      },
+      {
+        "step": 3,
+        "action": "evaluate_gate",
+        "hash": "i9j0k1l2",
+        "status": "verified"
+      },
+      {
+        "step": 4,
+        "action": "determine_lock_state",
+        "hash": "m3n4o5p6",
+        "status": "verified"
+      },
+      {
+        "step": 5,
+        "action": "record_decision",
+        "hash": "q7r8s9t0",
+        "status": "verified"
+      }
+    ]
+  }
+]

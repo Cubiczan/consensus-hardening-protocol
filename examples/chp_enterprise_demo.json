@@ -1,0 +1,485 @@
+{
+  "finance": [
+    {
+      "decision_id": "chp-demo-20260611-192832",
+      "title": "Capital Reallocation Decision \u2014 $2M",
+      "input_data": {
+        "entity": "Acme Corp",
+        "period": "2026-Q1",
+        "actual_revenue": 42500000,
+        "budget_revenue": 45000000,
+        "variance_pct": -5.56,
+        "recommendation": "Reallocate $2M from R&D to Sales based on revenue shortfall"
+      },
+      "lock_state": "PROVISIONAL_LOCK",
+      "foundation": {
+        "agent_id": "finance-analyzer-v1",
+        "claim": "Revenue shortfall of 5.56% requires expense rebalancing: reduce R&D by $2M, increase Sales by $2M",
+        "sources": [
+          "Acme Corp Q1 2026 P&L (pre-audit)",
+          "Sales pipeline report (CRM, fetched 2026-04-01)",
+          "Industry benchmark: SaaS companies target <5% rev variance"
+        ],
+        "reasoning_chain": [
+          "Step 1: Actual revenue of $42.5M is 5.56% below budget of $45M",
+          "Step 2: Shortfall pattern matches underperforming Sales, not R&D",
+          "Step 3: Industry data shows rebalancing reduces strategic variance",
+          "Step 4: Recommend $2M shift from R&D (performing) to Sales (struggling)"
+        ],
+        "confidence": 0.87,
+        "timestamp": "2026-06-11T19:28:32.254241+00:00"
+      },
+      "attack": {
+        "agent_id": "adversary-chp",
+        "vulnerability": "Foundation data pre-dates Q1 close. The 'pre-audit' P&L was superseded by final audited figures showing only 2.1% variance. The CRM pipeline report was also stale (90-day old pipeline data). The agent's confidence (0.87) is unsupported given stale source data.",
+        "severity": 0.92,
+        "evidence": "Comparing pre-audit ($42.5M) vs final audited ($44.05M) revenue. Stale CRM data reduces pipeline accuracy by ~40%. The 5.56% variance drops to 2.1% with final data \u2014 below the 3% rebalancing threshold.",
+        "recommendation": "R0 ESCALATE: Require refreshed source data before any decision. Mark foundation as 'STALE \u2014 requires re-validation'."
+      },
+      "gate_result": {
+        "passed": false,
+        "verdict": "ESCALATE",
+        "discrepancies": [
+          "Source data staleness: pre-audit figures superseded by final audited",
+          "Reference mismatch: product grade or scope differs from claim",
+          "Price benchmark out of date: market conditions have shifted"
+        ],
+        "adjusted_confidence": 0.41,
+        "timestamp": "2026-06-11T19:28:32.254280+00:00"
+      },
+      "output_data": {
+        "final_verdict": "ESCALATE",
+        "recommendation": "R0 ESCALATE: Require refreshed source data before any decision. Mark foundation as 'STALE \u2014 requires re-validation'."
+      },
+      "sandbox_replay_hash": "chp-sandbox-v2::a1b2c3d4::e5f6g7h8::i9j0k1l2::m3n4o5p6::q7r8s9t0",
+      "sandbox_replay_log": [
+        {
+          "step": 1,
+          "action": "load_foundation",
+          "hash": "a1b2c3d4",
+          "status": "verified"
+        },
+        {
+          "step": 2,
+          "action": "apply_adversarial_probe",
+          "hash": "e5f6g7h8",
+          "status": "verified"
+        },
+        {
+          "step": 3,
+          "action": "evaluate_gate",
+          "hash": "i9j0k1l2",
+          "status": "verified"
+        },
+        {
+          "step": 4,
+          "action": "determine_lock_state",
+          "hash": "m3n4o5p6",
+          "status": "verified"
+        },
+        {
+          "step": 5,
+          "action": "record_decision",
+          "hash": "q7r8s9t0",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "decision_id": "chp-demo-20260611-192832",
+      "title": "Lithium Hydroxide Supplier Approval",
+      "input_data": {
+        "supplier": "GreenLithium Extractions Ltd",
+        "volume_tonnes": 500,
+        "price_per_tonne": 14200,
+        "total_contract_value": 7100000,
+        "region": "Chile"
+      },
+      "lock_state": "PROVISIONAL_LOCK",
+      "foundation": {
+        "agent_id": "supply-chain-analyzer-v1",
+        "claim": "GreenLithium Extractions Ltd meets all supplier qualification criteria for a 500-tonne lithium hydroxide contract",
+        "sources": [
+          "GreenLithium ESG report 2025",
+          "Due diligence questionnaire (completed 2025-11)",
+          "Reference check: BatteryCo (300t contract, 2024)",
+          "Price benchmark: Lithium price index (2026-03)"
+        ],
+        "reasoning_chain": [
+          "Step 1: ESG report shows compliance with IRMA standards",
+          "Step 2: DDQ indicates adequate quality control processes",
+          "Step 3: Reference from BatteryCo confirms on-time delivery",
+          "Step 4: Price of $14,200/t is within market range ($13,500-$15,000)",
+          "Step 5: Recommend approval with PROVISIONAL_LOCK (90-day review)"
+        ],
+        "confidence": 0.82,
+        "timestamp": "2026-06-11T19:28:32.254312+00:00"
+      },
+      "attack": {
+        "agent_id": "adversary-chp",
+        "vulnerability": "The ESG report and DDQ are both >6 months old. GreenLithium was cited for water rights violations in Jan 2026 (Chilean environmental regulator). No current audit certificate. The reference from BatteryCo was for a different product grade (technical-grade, not battery-grade). Price benchmark from 2026-03 does not reflect the April 2026 lithium price spike.",
+        "severity": 0.88,
+        "evidence": "Water rights citation: Chilean SMA Resolution 2026-017. DDQ expiry: November 2025. Product grade mismatch: BatteryCo purchased Li\u2082CO\u2083 (technical), not LiOH (battery-grade). Price index as of 2026-05: $16,800/t (+18%).",
+        "recommendation": "R0 FAIL: Supplier due diligence is stale. Require updated ESG audit (post-Jan 2026), current DDQ, and revised pricing. Escalate for human review."
+      },
+      "gate_result": {
+        "passed": false,
+        "verdict": "ESCALATE",
+        "discrepancies": [
+          "Source data staleness: pre-audit figures superseded by final audited",
+          "Reference mismatch: product grade or scope differs from claim",
+          "Price benchmark out of date: market conditions have shifted"
+        ],
+        "adjusted_confidence": 0.37999999999999995,
+        "timestamp": "2026-06-11T19:28:32.254323+00:00"
+      },
+      "output_data": {
+        "final_verdict": "ESCALATE",
+        "recommendation": "R0 FAIL: Supplier due diligence is stale. Require updated ESG audit (post-Jan 2026), current DDQ, and revised pricing. Escalate for human review."
+      },
+      "sandbox_replay_hash": "chp-sandbox-v2::a1b2c3d4::e5f6g7h8::i9j0k1l2::m3n4o5p6::q7r8s9t0",
+      "sandbox_replay_log": [
+        {
+          "step": 1,
+          "action": "load_foundation",
+          "hash": "a1b2c3d4",
+          "status": "verified"
+        },
+        {
+          "step": 2,
+          "action": "apply_adversarial_probe",
+          "hash": "e5f6g7h8",
+          "status": "verified"
+        },
+        {
+          "step": 3,
+          "action": "evaluate_gate",
+          "hash": "i9j0k1l2",
+          "status": "verified"
+        },
+        {
+          "step": 4,
+          "action": "determine_lock_state",
+          "hash": "m3n4o5p6",
+          "status": "verified"
+        },
+        {
+          "step": 5,
+          "action": "record_decision",
+          "hash": "q7r8s9t0",
+          "status": "verified"
+        }
+      ]
+    }
+  ],
+  "healthcare": [
+    {
+      "decision_id": "chp-healthcare-20260611-192832",
+      "title": "Clinical Trial Budget Reallocation \u2014 Phase 2 Oncology ($1.5M)",
+      "input_data": {
+        "trial_id": "ONC-P2-2024-047",
+        "phase": "Phase 2",
+        "indication": "Metastatic melanoma",
+        "current_budget": 12000000,
+        "reallocation_amount": 1500000,
+        "from_area": "Patient recruitment (enrollment below target)",
+        "to_area": "Biomarker sequencing (higher than anticipated volume)",
+        "enrolled_patients": 87,
+        "target_patients": 120,
+        "projected_completion": "2026-09"
+      },
+      "lock_state": "PROVISIONAL_LOCK",
+      "foundation": {
+        "agent_id": "clinical-ops-analyzer-v1",
+        "claim": "Reallocate $1.5M from patient recruitment to biomarker sequencing. Enrollment at 87/120 (72.5%) with 3 months remaining \u2014 recruitment budget is underspent. Sequencing costs exceed projections by 40% due to expanded biomarker panel.",
+        "sources": [
+          "Site enrollment reports (aggregated, dated 2026-04-15)",
+          "IRB approval #ONC-IRB-2024-089 (approved 2024-11, 12-month term)",
+          "Sequencing vendor invoice history (2026-Q1)",
+          "Sponsor budget guidelines \u2014 per-patient cost estimates",
+          "ClinicalTrials.gov listing NCT-047-ONC (protocol version 3.2)"
+        ],
+        "reasoning_chain": [
+          "Step 1: Enrollment at 87/120 = 72.5%, below the 80% threshold for 3 months out",
+          "Step 2: Recruitment spend is tracking 25% under budget due to slower enrollment",
+          "Step 3: Sequencing costs are 40% over budget from expanded panel requirements",
+          "Step 4: Reallocation of $1.5M from recruitment to sequencing balances both line items",
+          "Step 5: IRB approval valid through 2025-11 \u2014 no regulatory blocker"
+        ],
+        "confidence": 0.85,
+        "timestamp": "2026-06-11T19:28:32.303302+00:00"
+      },
+      "attack": {
+        "agent_id": "adversary-chp",
+        "vulnerability": "IRB approval #ONC-IRB-2024-089 has a 12-month term ending November 2025. It is now June 2026 \u2014 the approval expired 7 months ago. Enrollment reports are from April 2026 and do not reflect May-June site activity. The trial protocol (v3.2) was amended in February 2026 to add a new biomarker panel \u2014 the IRB never reviewed this amendment. No evidence that sites received the protocol amendment.",
+        "severity": 0.91,
+        "evidence": "IRB expiry: November 2025 vs current June 2026 (7 months expired). Protocol amendment v3.2 approved by sponsor Feb 2026 but IRB approval letter shows no amendment review. Enrollment data staleness: 60+ days old. Under 21 CFR 312.66, expired IRB approval means all enrollment since Nov 2025 may be non-compliant.",
+        "recommendation": "R0 ESCALATE: IRB approval has expired. All enrollment since November 2025 is potentially non-compliant with 21 CFR 312. Protocol amendment v3.2 was never IRB-reviewed. Escalate to clinical compliance officer immediately. Halt any budget action until regulatory status is confirmed."
+      },
+      "gate_result": {
+        "passed": false,
+        "verdict": "ESCALATE",
+        "discrepancies": [
+          "IRB approval expired: 12-month term ended November 2025, current date is June 2026",
+          "Protocol amendment v3.2 (Feb 2026) not reviewed by IRB",
+          "Enrollment data stale: 60+ days old, May-June activity not reflected",
+          "Regulatory risk: enrollment under expired IRB may violate 21 CFR 312.66"
+        ],
+        "adjusted_confidence": 0.39499999999999996,
+        "timestamp": "2026-06-11T19:28:32.303324+00:00"
+      },
+      "output_data": {
+        "final_verdict": "ESCALATE",
+        "recommendation": "R0 ESCALATE: IRB approval has expired. All enrollment since November 2025 is potentially non-compliant with 21 CFR 312. Protocol amendment v3.2 was never IRB-reviewed. Escalate to clinical compliance officer immediately. Halt any budget action until regulatory status is confirmed."
+      },
+      "sandbox_replay_hash": "chp-sandbox-healthcare::hc-a1b2c3d4::hc-e5f6g7h8::hc-i9j0k1l2::hc-m3n4o5p6::hc-q7r8s9t0",
+      "sandbox_replay_log": [
+        {
+          "step": 1,
+          "action": "load_foundation",
+          "hash": "hc-a1b2c3d4",
+          "status": "verified"
+        },
+        {
+          "step": 2,
+          "action": "apply_adversarial_probe",
+          "hash": "hc-e5f6g7h8",
+          "status": "verified"
+        },
+        {
+          "step": 3,
+          "action": "check_regulatory_compliance",
+          "hash": "hc-i9j0k1l2",
+          "status": "verified"
+        },
+        {
+          "step": 4,
+          "action": "determine_lock_state",
+          "hash": "hc-m3n4o5p6",
+          "status": "verified"
+        },
+        {
+          "step": 5,
+          "action": "record_decision",
+          "hash": "hc-q7r8s9t0",
+          "status": "verified"
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "decision_id": "chp-legal-20260611-192832",
+      "title": "SaaS Master Services Agreement \u2014 DataVault Inc. ($240K ACV)",
+      "input_data": {
+        "contract_type": "MSA + SOW",
+        "vendor": "DataVault Inc.",
+        "acv": 240000,
+        "term_months": 36,
+        "total_contract_value": 720000,
+        "jurisdiction": "New York",
+        "governing_law": "New York",
+        "has_dpa": false,
+        "liability_caps": [
+          {
+            "section": "8.1(a)",
+            "cap": 500000,
+            "type": "general liability"
+          },
+          {
+            "section": "8.4",
+            "cap": "1x fees paid in prior 12 months (~$240K)",
+            "type": "data breach"
+          }
+        ],
+        "termination_notice_days": 30,
+        "auto_renewal": true,
+        "auto_renewal_term_months": 12
+      },
+      "lock_state": "PROVISIONAL_LOCK",
+      "foundation": {
+        "agent_id": "contract-reviewer-v1",
+        "claim": "DataVault Inc. MSA is standard SaaS terms with acceptable liability cap of $500K and 30-day termination notice. Recommend execution as-is.",
+        "sources": [
+          "DataVault Inc. MSA v2.4 (received 2026-05-28)",
+          "DataVault Inc. SOW #2026-03 for data migration services",
+          "Vendor risk assessment questionnaire (completed 2026-04)",
+          "Market benchmark: SaaS MSA liability caps average $250K-$1M for $240K ACV",
+          "Existing vendor comparison: 5 peer companies' MSAs in repository"
+        ],
+        "reasoning_chain": [
+          "Step 1: Vendor MSA received, reviewed all 12 sections",
+          "Step 2: Liability cap of $500K in Section 8.1(a) is within market range",
+          "Step 3: 30-day termination notice is standard \u2014 no special notice period needed",
+          "Step 4: Indemnification clause is reciprocal, not one-sided",
+          "Step 5: Recommend execution with no redlines needed"
+        ],
+        "confidence": 0.79,
+        "timestamp": "2026-06-11T19:28:32.350689+00:00"
+      },
+      "attack": {
+        "agent_id": "adversary-chp",
+        "vulnerability": "The MSA has a CLASHING LIABILITY STRUCTURE: Section 8.1(a) caps general liability at $500K, but Section 8.4 caps data breach liability at only '1x fees paid in prior 12 months' (~$240K) \u2014 conflicting caps for a data migration vendor who will handle PHI/PII. There is NO Data Processing Addendum (DPA), which violates NY SHIELD Act requirements for vendors processing personal data. The auto-renewal clause (12 months) conflicts with the stated 30-day termination notice \u2014 to avoid auto-renewal, the customer must give notice 90+ days before term end, effectively making it a 90-day notice period despite stating 30 days.",
+        "severity": 0.89,
+        "evidence": "Section 8.4 cap: $240K (1x fees) vs market standard of $500K-$1M for data breach. No DPA despite vendor handling personal data \u2014 NY SHIELD Act Sec 899-aa requires written data security agreements with third-party vendors. Auto-renewal buried in Section 10.3: 'Either party must provide written notice of non-renewal at least 90 days prior to the end of the initial term' \u2014 contradicts stated '30-day termination notice.' The SOW includes data migration of employee records (PII).",
+        "recommendation": "R0 ESCALATE: Material issues found: (1) Clashing liability caps create ambiguity on data breach liability. (2) Missing DPA violates NY SHIELD Act. (3) Auto-renewal notice period is 90 days, not 30 as stated. Do not execute without legal review. Escalate to chief compliance counsel."
+      },
+      "gate_result": {
+        "passed": false,
+        "verdict": "ESCALATE",
+        "discrepancies": [
+          "Clashing liability caps: $500K general vs ~$240K data breach (Section 8.1 vs 8.4)",
+          "Missing Data Processing Addendum \u2014 violates NY SHIELD Act requirements",
+          "Auto-renewal notice period is 90 days, not 30 days as stated (Section 10.3)",
+          "Data migration SOW includes PII but no data security provisions found"
+        ],
+        "adjusted_confidence": 0.34500000000000003,
+        "timestamp": "2026-06-11T19:28:32.350721+00:00"
+      },
+      "output_data": {
+        "final_verdict": "ESCALATE",
+        "recommendation": "R0 ESCALATE: Material issues found: (1) Clashing liability caps create ambiguity on data breach liability. (2) Missing DPA violates NY SHIELD Act. (3) Auto-renewal notice period is 90 days, not 30 as stated. Do not execute without legal review. Escalate to chief compliance counsel."
+      },
+      "sandbox_replay_hash": "chp-sandbox-legal::lg-a1b2c3d4::lg-e5f6g7h8::lg-i9j0k1l2::lg-m3n4o5p6::lg-q7r8s9t0",
+      "sandbox_replay_log": [
+        {
+          "step": 1,
+          "action": "load_contract_text",
+          "hash": "lg-a1b2c3d4",
+          "status": "verified"
+        },
+        {
+          "step": 2,
+          "action": "cross_reference_clauses",
+          "hash": "lg-e5f6g7h8",
+          "status": "verified"
+        },
+        {
+          "step": 3,
+          "action": "check_regulatory_compliance",
+          "hash": "lg-i9j0k1l2",
+          "status": "verified"
+        },
+        {
+          "step": 4,
+          "action": "determine_lock_state",
+          "hash": "lg-m3n4o5p6",
+          "status": "verified"
+        },
+        {
+          "step": 5,
+          "action": "record_recommendation",
+          "hash": "lg-q7r8s9t0",
+          "status": "verified"
+        }
+      ]
+    }
+  ],
+  "engineering": [
+    {
+      "decision_id": "chp-engineering-20260611-192832",
+      "title": "Database Migration: PostgreSQL \u2192 VectorDB-X (2TB, Production)",
+      "input_data": {
+        "source": "PostgreSQL 15 (production, 2TB, ~500M rows)",
+        "target": "VectorDB-X v3.2 (new cluster, 4 nodes)",
+        "data_types": [
+          "user_profiles",
+          "product_embeddings",
+          "search_index",
+          "analytics_events"
+        ],
+        "estimated_downtime_minutes": 45,
+        "migration_tool": "pg2vectool v1.0 (custom, built in-house)",
+        "rollback_plan": "pg_dump backup taken before migration, restore if migration fails",
+        "security_review_status": "not scheduled",
+        "dry_run_status": "not performed",
+        "team_approvals": [
+          "engineering-lead",
+          "product-manager"
+        ],
+        "missing_approvals": [
+          "security-team",
+          "database-architect"
+        ]
+      },
+      "lock_state": "PROVISIONAL_LOCK",
+      "foundation": {
+        "agent_id": "infra-migration-analyzer-v1",
+        "claim": "PostgreSQL to VectorDB-X migration is safe to proceed. The 2TB dataset migrates in ~45 minutes with pg2vectool. Rollback is available via pg_dump restore. Engineering lead and product manager have approved.",
+        "sources": [
+          "VectorDB-X documentation: migration throughput benchmarks (150MB/s)",
+          "pg2vectool v1.0 test results (dev environment, 50GB subset)",
+          "Engineering architecture review meeting notes (2026-05-20)",
+          "Load testing report: VectorDB-X query latency vs PostgreSQL",
+          "pg_dump backup manifest (nightly, compressed)"
+        ],
+        "reasoning_chain": [
+          "Step 1: VectorDB-X benchmarks show >150MB/s throughput \u2192 2TB migrates in <4 hours",
+          "Step 2: pg2vectool tested on 50GB dev subset \u2014 no data loss or corruption",
+          "Step 3: Engineering lead and PM approved \u2014 team is aligned",
+          "Step 4: Nightly pg_dump provides rollback capability",
+          "Step 5: Recommend proceeding with migration during maintenance window"
+        ],
+        "confidence": 0.83,
+        "timestamp": "2026-06-11T19:28:32.394137+00:00"
+      },
+      "attack": {
+        "agent_id": "adversary-chp",
+        "vulnerability": "NO SECURITY REVIEW: The migration moves 2TB of user profiles (including PII) and product embeddings to a new database system. Security team has not reviewed VectorDB-X's encryption-at-rest, access controls, or data isolation. NO DRY-RUN: pg2vectool was tested on a 50GB dev subset, not the full 2TB. The tool is custom-built and has never migrated anything larger than 50GB. FALSE ROLLBACK: The rollback plan assumes pg_dump backup is restorable, but the backup hasn't been validated in 6 months. A 2TB pg_restore would take 8-12 hours at best \u2014 the stated 45-minute rollback is impossible. Missing database architect approval \u2014 the person most qualified to judge this migration hasn't signed off.",
+        "severity": 0.95,
+        "evidence": "Security review: NOT SCHEDULED \u2014 violates Change Management Policy Section 4.2 (all production data migrations require security sign-off). Dry-run status: NOT PERFORMED \u2014 violates Engineering Runbook Section 3.1 (full dataset dry-run required for any migration >100GB). pg_dump restore test: LAST VALIDATED December 2025 (6+ months stale). Actual restore time for 2TB: estimated 8-12 hours (not 45 min). Missing approval from database architect noted in architecture review notes.",
+        "recommendation": "R0 ESCALATE: Three blocking issues: (1) No security review \u2014 do NOT migrate PII without security sign-off. (2) No production-scale dry-run \u2014 custom tool unproven at 2TB. (3) Rollback plan is fiction \u2014 8-12 hour restore vs claimed 45 minutes. Require: security review, full dry-run with 2TB verified subset, validated restore test, and database architect approval."
+      },
+      "gate_result": {
+        "passed": false,
+        "verdict": "ESCALATE",
+        "discrepancies": [
+          "Security review not scheduled \u2014 violates Change Management Policy \u00a74.2",
+          "No production-scale dry-run performed (custom tool unproven at 2TB)",
+          "Rollback plan unverified: pg_dump restore not tested in 6+ months",
+          "Rollback time estimate wrong: 45 min claimed vs actual 8-12 hours",
+          "Missing database architect approval \u2014 critical stakeholder not consulted"
+        ],
+        "adjusted_confidence": 0.355,
+        "timestamp": "2026-06-11T19:28:32.394158+00:00"
+      },
+      "output_data": {
+        "final_verdict": "ESCALATE",
+        "recommendation": "R0 ESCALATE: Three blocking issues: (1) No security review \u2014 do NOT migrate PII without security sign-off. (2) No production-scale dry-run \u2014 custom tool unproven at 2TB. (3) Rollback plan is fiction \u2014 8-12 hour restore vs claimed 45 minutes. Require: security review, full dry-run with 2TB verified subset, validated restore test, and database architect approval."
+      },
+      "sandbox_replay_hash": "chp-sandbox-engineering::en-a1b2c3d4::en-e5f6g7h8::en-i9j0k1l2::en-m3n4o5p6::en-q7r8s9t0",
+      "sandbox_replay_log": [
+        {
+          "step": 1,
+          "action": "load_migration_plan",
+          "hash": "en-a1b2c3d4",
+          "status": "verified"
+        },
+        {
+          "step": 2,
+          "action": "validate_security_reviews",
+          "hash": "en-e5f6g7h8",
+          "status": "verified"
+        },
+        {
+          "step": 3,
+          "action": "check_rollback_viability",
+          "hash": "en-i9j0k1l2",
+          "status": "verified"
+        },
+        {
+          "step": 4,
+          "action": "determine_lock_state",
+          "hash": "en-m3n4o5p6",
+          "status": "verified"
+        },
+        {
+          "step": 5,
+          "action": "record_decision",
+          "hash": "en-q7r8s9t0",
+          "status": "verified"
+        }
+      ]
+    }
+  ]
+}
