@@ -141,6 +141,8 @@ PYTHONPATH=src python3 -m cme.cli demo
 
 Both produce a full Markdown orchestration report: problem classification, per-agent reasoning traces, grounding verdicts, playbook deltas, and a final executable workflow.
 
+New here? [docs/quickstart.md](docs/quickstart.md) walks through installing, running a basic consensus round, and reading the output in about 5 minutes.
+
 ---
 
 ## Consensus Hardening Protocol
