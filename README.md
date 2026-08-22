@@ -5,11 +5,48 @@ mandatory adversary pass, domain-dependent score floors, a human lock, and a
 signed decision record — so a high-stakes decision made by agents can be
 audited after the fact.
 
+**Canonical repo:** [icohangar-ops/consensus-hardening-protocol](https://github.com/icohangar-ops/consensus-hardening-protocol)
+
+## Install
+
+### Python (PyPI)
+
+Profile A — deliberation engine, R0/foundation/adversary/human lock, CLI, and
+the normative spec + conformance harness.
+
 ```bash
 pip install consensus-hardening-protocol
 ```
 
-No required dependencies. Python 3.10+.
+- Package: [consensus-hardening-protocol](https://pypi.org/project/consensus-hardening-protocol/)
+- Requires Python 3.10+ · no required dependencies
+
+```python
+from chp import CHPOrchestrator, DecisionRegistry
+```
+
+```bash
+chp init --apply
+```
+
+### TypeScript (npm)
+
+Profile B — capital / spend gate, float-aware canonical JSON, and signed audit
+ledger. Lives in a sibling package so Node apps can depend on a small surface:
+
+```bash
+npm install @cubiczan/chp
+```
+
+- Package: [@cubiczan/chp](https://www.npmjs.com/package/@cubiczan/chp)
+- Source: [icohangar-ops/cubiczan-chp](https://github.com/icohangar-ops/cubiczan-chp)
+
+```ts
+import { evaluateGate, approveHuman } from "@cubiczan/chp";
+```
+
+Both packages are checked against `spec/CHP-v1.0.md` golden vectors
+(Python reference: 70/70 · TypeScript Profile B: 30/30).
 
 ## What it does
 
