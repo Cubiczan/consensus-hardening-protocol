@@ -3,35 +3,46 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cognitive-mesh-orchestrator"
+name = "consensus-hardening-protocol"
 version = "0.1.0"
-description = "Cognitive Mesh Enterprise Orchestrator — multi-agent coordination for enterprise AI systems."
+description = "Adversarial decision hardening for multi-agent systems — R0 gate, adversary pass, human lock, signed decision record."
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [{name = "zan-maker"}]
-license = {text = "MIT"}
-keywords = ["ai", "agents", "orchestration", "context-engineering", "multi-agent"]
+license = { text = "MIT" }
+authors = [{ name = "Shyam Desigan", email = "sam@cubiczan.com" }]
+keywords = ["ai-agents", "multi-agent", "governance", "decision", "audit", "chp"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Quality Assurance",
 ]
-dependencies = [
-  "cubiczan-resilience @ git+https://github.com/icohangar-ops/cubiczan-resilience.git#subdirectory=python",
-]
+dependencies = []
 
 [project.optional-dependencies]
+resilience = ["cubiczan-resilience"]
+cockroachdb = ["sqlalchemy>=2.0"]
 dev = ["pytest>=8.0"]
 
+[project.urls]
+Homepage = "https://github.com/icohangar-ops/consensus-hardening-protocol"
+Specification = "https://github.com/icohangar-ops/consensus-hardening-protocol/blob/main/spec/CHP-v1.0.md"
+
 [project.scripts]
-cme = "cme.cli:main"
+chp = "chp.cli:main"
 
 [tool.setuptools]
-package-dir = {"" = "src"}
+package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["cme*", "demo*"]
+include = ["chp*"]
+
+[tool.setuptools.package-data]
+chp = ["kit/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/chp"]
