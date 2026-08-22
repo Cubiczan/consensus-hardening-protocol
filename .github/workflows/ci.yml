@@ -1,31 +1,30 @@
-name: CI
+name: ci
 on:
-  push:
+  push: { branches: [main] }
   pull_request:
-
 jobs:
-  python-syntax:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "${{ matrix.python }}" }
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Tests
+        run: pytest -q tests/chp
+      - name: CHP v1.0 conformance
+        # exits non-zero unless every golden vector passes
+        run: python spec/conformance/run_conformance.py --adapter reference
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Compile-check all Python files
-        run: |
-          python - <<'PYEOF'
-          import ast, os, sys
-          bad = []
-          SKIP = {'.git','node_modules','venv','.venv','target','dist','build','__pycache__','notebooks'}
-          for root, dirs, files in os.walk('.'):
-              dirs[:] = [d for d in dirs if d not in SKIP]
-              for f in files:
-                  if f.endswith('.py'):
-                      p = os.path.join(root, f)
-                      try:
-                          ast.parse(open(p,'rb').read(), filename=p)
-                      except SyntaxError as e:
-                          bad.append(f"{p}:{e.lineno}: {e.msg}")
-          print("\n".join(bad))
-          sys.exit(1 if bad else 0)
-          PYEOF
+        with: { python-version: "3.12" }
+      - run: pip install build twine
+      - run: python -m build
+      - run: twine check dist/*
