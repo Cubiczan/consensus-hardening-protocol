@@ -48,6 +48,17 @@ import { evaluateGate, approveHuman } from "@cubiczan/chp";
 Both packages are checked against `spec/CHP-v1.0.md` golden vectors
 (Python reference: 70/70 · TypeScript Profile B: 30/30).
 
+### MCP servers (installable wedge)
+
+| Server | Install | Role |
+|--------|---------|------|
+| [`@cubiczan/chp-mcp`](https://www.npmjs.com/package/@cubiczan/chp-mcp) | `npx -y @cubiczan/chp-mcp` | Profile B spend/HITL (`evaluate_spend_gate`) |
+| [`@cubiczan/agent-conductor`](https://www.npmjs.com/package/@cubiczan/agent-conductor) | `npx -y @cubiczan/agent-conductor` | AGENTS.md + skills + Profile A `decision_gate` / `decision_adversary` |
+
+Both are registered under the [official MCP Registry](https://registry.modelcontextprotocol.io) (`io.github.icohangar-ops/*`).
+
+**Conformance:** Profile A **70/70** · Profile B **30/30** (golden vectors in `spec/`).
+
 ## How the pieces fit
 
 CHP is the **engine**. MCP servers are the **transport**. Clients never call
