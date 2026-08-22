@@ -1,3 +1,7 @@
+> **Status:** Absorbed into [`consensus-hardening-protocol`](https://github.com/icohangar-ops/consensus-hardening-protocol).
+> The `.chp` kit injector from this repo is now `chp init` there — use `pip install consensus-hardening-protocol` (and for TypeScript Profile B: `npm install @cubiczan/chp`).
+> This repository is kept for history and will be archived.
+
 # _cubiczan-shared
 
 Portfolio-wide tooling. This repo holds no product code — it holds the scripts that keep
