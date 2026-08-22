@@ -48,6 +48,36 @@ import { evaluateGate, approveHuman } from "@cubiczan/chp";
 Both packages are checked against `spec/CHP-v1.0.md` golden vectors
 (Python reference: 70/70 · TypeScript Profile B: 30/30).
 
+## How the pieces fit
+
+CHP is the **engine**. MCP servers are the **transport**. Clients never call
+the package directly unless they are libraries themselves.
+
+```text
+MCP client (Cursor / Claude / …)
+        │  tools/call
+        ▼
+┌───────────────────────────┐
+│  MCP server (transport)   │  ← agent-conductor, codesentinel-mcp, …
+│  decision_gate            │
+│  decision_adversary       │
+│  evaluate_spend_gate      │
+└─────────────┬─────────────┘
+              │ depends on
+              ▼
+┌───────────────────────────┐
+│  Published CHP packages   │
+│  PyPI: consensus-hardening-protocol  (Profile A)
+│  npm:  @cubiczan/chp                 (Profile B)
+└───────────────────────────┘
+```
+
+| Layer | Role | Example |
+|-------|------|---------|
+| MCP client | Issues `tools/call` | Cursor, Claude Code, Copilot |
+| MCP server | Exposes CHP as tools | [agent-conductor](https://github.com/icohangar-ops/agent-conductor) (`decision_gate` → R0, `decision_adversary` → triangulation) |
+| Published package | Protocol implementation | this repo (PyPI) · [@cubiczan/chp](https://github.com/icohangar-ops/cubiczan-chp) (npm) |
+
 ## What it does
 
 An agent that is confident and wrong is more dangerous than one that is slow.
