@@ -1,5 +1,9 @@
 # Consensus Hardening Protocol
 
+[![PyPI](https://img.shields.io/pypi/v/consensus-hardening-protocol)](https://pypi.org/project/consensus-hardening-protocol/)
+[![npm](https://img.shields.io/npm/v/@cubiczan/chp)](https://www.npmjs.com/package/@cubiczan/chp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 Adversarial decision hardening for multi-agent systems. An R0 entry gate, a
 mandatory adversary pass, domain-dependent score floors, a human lock, and a
 signed decision record — so a high-stakes decision made by agents can be
@@ -54,6 +58,8 @@ Both packages are checked against `spec/CHP-v1.0.md` golden vectors
 |--------|---------|------|
 | [`@cubiczan/chp-mcp`](https://www.npmjs.com/package/@cubiczan/chp-mcp) | `npx -y @cubiczan/chp-mcp` | Profile B spend/HITL (`evaluate_spend_gate`) |
 | [`@cubiczan/agent-conductor`](https://www.npmjs.com/package/@cubiczan/agent-conductor) | `npx -y @cubiczan/agent-conductor` | AGENTS.md + skills + Profile A `decision_gate` / `decision_adversary` |
+| [`@cubiczan/governed-mcp-gateway`](https://www.npmjs.com/package/@cubiczan/governed-mcp-gateway) | `npx -y @cubiczan/governed-mcp-gateway` | HTTP MCP control plane (principal + vault) |
+| [`@cubiczan/codesentinel-mcp`](https://www.npmjs.com/package/@cubiczan/codesentinel-mcp) | `npx -y @cubiczan/codesentinel-mcp` | Codebase health analysis |
 
 Both are registered under the [official MCP Registry](https://registry.modelcontextprotocol.io) (`io.github.icohangar-ops/*`).
 
@@ -199,9 +205,11 @@ warning, because reintroducing D-A1 through naming alone is too easy.
 ## Optional extras
 
 ```bash
-pip install "consensus-hardening-protocol[resilience]"   # full retry/timeout layer
+pip install "consensus-hardening-protocol[resilience]"   # pulls cubiczan-resilience from PyPI
 pip install "consensus-hardening-protocol[cockroachdb]"  # distributed registry
 ```
+
+The `resilience` extra depends on [`cubiczan-resilience`](https://pypi.org/project/cubiczan-resilience/) (timeout, jittered backoff, circuit breaker). TypeScript / Rust ports: [`@cubiczan/resilience`](https://www.npmjs.com/package/@cubiczan/resilience) and [`resilient-call`](https://crates.io/crates/resilient-call).
 
 Without the `resilience` extra, the package uses a dependency-free retry with
 exponential backoff that honours `max_attempts` but not `timeout` — bounding an
