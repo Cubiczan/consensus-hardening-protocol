@@ -377,6 +377,16 @@ and a `content_hash` over the normative field set:
 hash, never inside it — including them would make the hash unreproducible and defeat
 cross-implementation verification. Records **SHOULD** be appended to a §3.3 ledger.
 
+### 6.7 Identity and attribution
+
+Every decision record **MUST** be attributable to a non-empty actor identity in the audit
+trail. A human approval **MUST** likewise carry a non-empty approver identity. Blank,
+redacted, or anonymous attribution is not trustworthy and is therefore non-conformant.
+
+Actor and approver identities are provenance metadata: they are recorded alongside the
+hash, not inside the hashed normative field set. If an implementation cannot name the
+actor or approver, it **MUST** refuse to emit a locked decision.
+
 ---
 
 ## 7. Conformance
@@ -467,4 +477,5 @@ version **MUST** refuse to verify rather than assume compatibility.
 - [ ] **B:** daily window is the UTC calendar day (§6.4)
 - [ ] **B:** `approve_human` re-runs the full evaluation (§6.5)
 - [ ] **B:** `timestamp`/`decision_id` excluded from the hash (§6.6)
+- [ ] **B:** decision actor and human approver are non-empty, attributable identities (§6.7)
 - [ ] Conformance suite green in CI (§7.1)
