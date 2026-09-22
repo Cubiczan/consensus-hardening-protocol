@@ -222,6 +222,28 @@ rather than this package.
 `chp.AdversaryMeshAgent` is an adapter for that same host. It is exported lazily,
 so the package imports fine without it.
 
+## Standard kit — evidence matrix
+
+The portfolio **standard kit** is canonically housed in this repository
+(relocated from the archived
+[`_cubiczan-shared`](https://github.com/icohangar-ops/_cubiczan-shared)):
+[`inject_stack.py`](inject_stack.py) seeds sibling repos with the governance +
+resilience scaffolding, and [`tools/verify_evidence_matrix.py`](tools/verify_evidence_matrix.py)
+is the canonical, version-stamped evidence-matrix verifier.
+
+`inject_stack.py --kit evidence` seeds a sibling repo with the **evidence-matrix
+gate**: a byte-identical, version-stamped vendored copy of the canonical verifier, a
+scaffold `evidence/matrix.yaml`, the required `evidence-matrix` CI job, and (once) the
+README norm that every capability claim in the repo is backed by the matrix.
+
+Per-repo adoption: author real matrix rows from the current tree — back each claim
+with evidence that exists (a test, a script, a manifest field, a hashed artifact) or
+reword the claim to what is true, visibly in the PR diff — keep the CI job required,
+and state the norm in the repo README. The verifier is stdlib-only, network-free, and
+refuses fail-closed: there is no invocation of it that passes an unverified repo. The
+part is opt-in because the scaffold matrix is failing by design; full kit behaviour is
+documented in [`CUBICZAN_STACK.md`](CUBICZAN_STACK.md).
+
 ## Licence
 
 MIT.
