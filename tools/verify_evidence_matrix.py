@@ -41,7 +41,7 @@ tree); the repo's normal CI test job is what actually executes them.
 exit 0.
 """
 # Canonical source: icohangar-ops/_cubiczan-shared · tools/verify_evidence_matrix.py
-# Canonical kit commit: pinned by the kit-registration commit that introduced v1.0.0.
+# Canonical kit commit: ceb4831114d31a5c97ab2225242d93abc443fc29 (feat(evidence): canonical verifier v1.0.0)
 import argparse
 import hashlib
 import json

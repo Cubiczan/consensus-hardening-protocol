@@ -14,7 +14,8 @@ The leading underscore marks it as infrastructure, alongside `_cubiczan-updates`
 | File | What it is |
 |---|---|
 | [`CUBICZAN_STACK.md`](CUBICZAN_STACK.md) | Canonical stack blurb injected into sibling READMEs, plus the standard-kit docs |
-| [`inject_stack.py`](inject_stack.py) | Seeds each sibling repo with the standard kit (README header, `AGENTS.md`, `.chp/`, resilience reference) |
+| [`inject_stack.py`](inject_stack.py) | Seeds each sibling repo with the standard kit (README header, `AGENTS.md`, `.chp/`, resilience reference, evidence-matrix gate) |
+| [`tools/verify_evidence_matrix.py`](tools/verify_evidence_matrix.py) | Canonical evidence-matrix verifier (v1.0.0) — vendored, version-stamped, into sibling repos |
 | [`update_github_meta.py`](update_github_meta.py) | Sets GitHub descriptions and topics across the org |
 
 Both scripts are stdlib-only Python and **dry-run by default**. Neither writes anything
@@ -29,9 +30,26 @@ python3 inject_stack.py --kit agents,chp --repos meshcfo,cleanmandate --apply
 python3 inject_stack.py --kit resilience --apply
 ```
 
-Kit parts: `readme` (opt-in), `agents`, `chp`, `resilience`. Idempotent — re-running skips
+Kit parts: `readme` (opt-in), `agents`, `chp`, `resilience`, `evidence` (opt-in — it
+scaffolds a failing gate that the repo's author must fill). Idempotent — re-running skips
 files that already exist. `--force` overwrites managed files. Full behaviour, including how
 the resilience part detects each repo's language, is documented in
+[`CUBICZAN_STACK.md`](CUBICZAN_STACK.md#standard-kit-inject_stackpy).
+
+## Evidence matrix
+
+`--kit evidence` seeds a sibling repo with the **evidence-matrix gate**: a
+byte-identical, version-stamped vendored copy of the canonical verifier
+([`tools/verify_evidence_matrix.py`](tools/verify_evidence_matrix.py)), a scaffold
+`evidence/matrix.yaml`, the required `evidence-matrix` CI job, and (once) the README
+norm that every capability claim is backed by the matrix.
+
+Per-repo adoption: author real matrix rows from the current tree — back each claim with
+evidence that exists (a test, a script, a manifest field, a hashed artifact) or reword
+the claim to what is true, visibly in the PR diff — keep the CI job required, and state
+the norm in the repo README. The verifier is stdlib-only, network-free, and refuses
+fail-closed: there is no invocation of it that passes an unverified repo. The part is
+opt-in because the scaffold matrix is failing by design; its details live in
 [`CUBICZAN_STACK.md`](CUBICZAN_STACK.md#standard-kit-inject_stackpy).
 
 ## GitHub metadata sweeper

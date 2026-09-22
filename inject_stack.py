@@ -9,6 +9,8 @@ scripted sweep seeds each sibling repo with governance + resilience scaffolding:
   agents      AGENTS.md contract (generalized from agent-conductor)
   chp         .chp/ decision-governance scaffold (policy.yaml + README.md)
   resilience  a dependency reference to cubiczan-resilience for the repo's language
+  evidence    the evidence-matrix gate: vendored stamped verifier + scaffold
+              matrix + required CI job (opt-in — the scaffold is failing by design)
 
 Plain Python, stdlib only. Safe by default: DRY-RUN unless you pass --apply.
 Never clobbers existing files unless you pass --force. Idempotent.
@@ -386,6 +388,118 @@ def inject_resilience(repo: str, repo_dir: Path, *, apply: bool, force: bool) ->
 
 
 # ---------------------------------------------------------------------------
+# Evidence-matrix gate
+# ---------------------------------------------------------------------------
+
+# The vendored copy is written BYTES-IDENTICAL from the kit's canonical file so
+# drift stays a one-line diff (see CUBICZAN_STACK.md, "Evidence matrix").
+_CANONICAL_VERIFIER = SHARED / "tools" / "verify_evidence_matrix.py"
+
+EVIDENCE_MATRIX_SCAFFOLD = """# evidence/matrix.yaml — every capability claim bound to deterministic evidence.
+# Scaffold written by the Cubiczan standard kit (inject_stack.py --kit evidence).
+# Replace with real rows: inventory the README/docs capability claims section by
+# section, and bind each one to evidence that exists in this tree — or reword the
+# claim to what is true, visibly. CI fails while this file has no claims: an
+# empty matrix is not decision-ready.
+#
+# Row shape (schema v1 — canonical verifier: tools/verify_evidence_matrix.py,
+# upstream: icohangar-ops/_cubiczan-shared):
+#
+# - id: C001                      # unique, stable, C-prefixed
+#   claim: >-                     # verbatim or tight paraphrase of the stated claim
+#     The stated capability, in one sentence.
+#   source: "README.md#features"  # locator where the claim is made; the file must exist
+#   evidence:                     # >= 1 ref; empty list is a failure
+#     - type: test                # test | script | manifest_field | artifact_hash
+#       ref: "tests/test_core.py::test_feature"
+#     - type: script
+#       ref: "scripts/verify_feature.sh"
+#       timeout_seconds: 120
+#     - type: manifest_field
+#       ref: "manifest.json:claims.parameters"
+#       equals:                   # pinned value the dotted path must equal
+#         hubspot_weight: 0.4
+#     - type: artifact_hash
+#       ref: "data/seed.csv"
+#       sha256: "64-hex-chars pinning the exact committed bytes"
+schema_version: 1
+repo: __REPO__
+claims: []
+"""
+
+EVIDENCE_WORKFLOW_YAML = """# Evidence-matrix gate — seeded by the Cubiczan standard kit
+# (icohangar-ops/_cubiczan-shared). Refuses the build while any claim in
+# evidence/matrix.yaml is unverifiable. Required: a red matrix job means the
+# README's capability claims are not evidence-backed. No secrets, no services.
+name: evidence-matrix
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  evidence-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python3 tools/verify_evidence_matrix.py
+"""
+
+EVIDENCE_README_SECTION = """## Evidence matrix
+
+Every capability claim in this file is backed by
+[`evidence/matrix.yaml`](evidence/matrix.yaml); CI refuses builds while any row
+is unverifiable (run `python3 tools/verify_evidence_matrix.py` locally).
+"""
+
+
+def inject_evidence(repo: str, repo_dir: Path, *, apply: bool, force: bool) -> str:
+    """Seed the evidence-matrix gate: stamped verifier + scaffold matrix + CI job."""
+    if not _CANONICAL_VERIFIER.is_file():
+        return "skip (kit is missing tools/verify_evidence_matrix.py — canonical verifier absent)"
+
+    targets = [
+        (repo_dir / "tools" / "verify_evidence_matrix.py", _CANONICAL_VERIFIER.read_bytes()),
+        (repo_dir / "evidence" / "matrix.yaml", EVIDENCE_MATRIX_SCAFFOLD.replace("__REPO__", repo).encode("utf-8")),
+        (repo_dir / ".github" / "workflows" / "evidence-matrix.yml", EVIDENCE_WORKFLOW_YAML.encode("utf-8")),
+    ]
+    existing = [t for t, _ in targets if t.exists()]
+    if existing and not force:
+        return f"skip (evidence files exist: {', '.join(str(t.relative_to(repo_dir)) for t in existing)})"
+
+    if apply:
+        for path, content in targets:
+            if path.exists() and not force:
+                continue
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(content)
+        readme_touched = False
+        readme = repo_dir / "README.md"
+        # The norm section is add-if-missing, never forced — README prose is
+        # the author's; the injector only adds the contract sentence once.
+        if readme.is_file() and "## Evidence matrix" not in readme.read_text():
+            readme.write_text(readme.read_text().rstrip() + "\n" + EVIDENCE_README_SECTION)
+            readme_touched = True
+        status = "WROTE evidence-matrix gate (stamped verifier + scaffold matrix + CI job"
+        if readme_touched:
+            status += " + README section"
+        status += ")"
+        if existing:
+            status += " (forced)"
+        return status
+
+    verb = "would overwrite" if existing else "would write"
+    return (
+        f"{verb} evidence-matrix gate: tools/verify_evidence_matrix.py "
+        "+ evidence/matrix.yaml + .github/workflows/evidence-matrix.yml"
+    )
+
+
+# ---------------------------------------------------------------------------
 # Orchestration
 # ---------------------------------------------------------------------------
 
@@ -394,6 +508,7 @@ KIT_PARTS = {
     "agents": inject_agents,
     "chp": inject_chp,
     "resilience": inject_resilience,
+    "evidence": inject_evidence,
 }
 DEFAULT_KIT = ["agents", "chp", "resilience"]
 
