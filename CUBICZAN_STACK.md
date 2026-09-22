@@ -109,8 +109,9 @@ python inject_stack.py [--kit PARTS] [--repos NAMES] [--apply] [--force]
 - `--kit agents,chp,resilience` — comma-separated parts to inject
   (default: `agents,chp,resilience`; `readme` and `evidence` are opt-in).
 - `--repos meshcfo,cleanmandate` — target a named list
-  (default: **all** sibling repos, excluding `_cubiczan-shared`,
-  `_cubiczan-updates`, `_AUDIT`, and `cubiczan-resilience` itself).
+  (default: **all** sibling repos, excluding `consensus-hardening-protocol`
+  (the kit home), `_cubiczan-shared` (archived), `_cubiczan-updates`,
+  `_AUDIT`, and `cubiczan-resilience` itself).
 - `--apply` — actually write. **Omitting it is a dry-run** (safe default): the
   script prints exactly what *would* change and writes nothing.
 - `--force` — overwrite existing managed files instead of skipping.

@@ -403,7 +403,7 @@ EVIDENCE_MATRIX_SCAFFOLD = """# evidence/matrix.yaml — every capability claim 
 # empty matrix is not decision-ready.
 #
 # Row shape (schema v1 — canonical verifier: tools/verify_evidence_matrix.py,
-# upstream: icohangar-ops/_cubiczan-shared):
+# canonical kit: icohangar-ops/consensus-hardening-protocol):
 #
 # - id: C001                      # unique, stable, C-prefixed
 #   claim: >-                     # verbatim or tight paraphrase of the stated claim
@@ -428,7 +428,8 @@ claims: []
 """
 
 EVIDENCE_WORKFLOW_YAML = """# Evidence-matrix gate — seeded by the Cubiczan standard kit
-# (icohangar-ops/_cubiczan-shared). Refuses the build while any claim in
+# (canonical kit: icohangar-ops/consensus-hardening-protocol). Refuses the build
+# while any claim in
 # evidence/matrix.yaml is unverifiable. Required: a red matrix job means the
 # README's capability claims are not evidence-backed. No secrets, no services.
 name: evidence-matrix
@@ -514,7 +515,8 @@ DEFAULT_KIT = ["agents", "chp", "resilience"]
 
 # Directories under REPOS_ROOT that are not target repos.
 NON_REPO_DIRS = {
-    "_cubiczan-shared",
+    "consensus-hardening-protocol",  # the kit home; don't inject into itself
+    "_cubiczan-shared",  # archived former kit home
     "_cubiczan-updates",
     "_AUDIT",
     "cubiczan-resilience",  # the source of truth; don't inject into itself

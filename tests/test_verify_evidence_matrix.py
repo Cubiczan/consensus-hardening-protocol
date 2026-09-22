@@ -395,7 +395,7 @@ def test_verifier_carries_version_stamp_and_canonical_commit():
     src = CANONICAL_VERIFIER.read_text(encoding="utf-8")
     assert 'EVIDENCE_MATRIX_VERIFIER_VERSION = "1.0.0"' in src
     assert "Canonical kit commit:" in src
-    assert "icohangar-ops/_cubiczan-shared" in src
+    assert "icohangar-ops/consensus-hardening-protocol" in src
 
 
 def test_verifier_has_no_skip_flags_or_quiet_modes():

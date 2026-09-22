@@ -40,8 +40,9 @@ tree); the repo's normal CI test job is what actually executes them.
 ``script`` rows are executed here, in-repo, with a hard timeout, and must
 exit 0.
 """
-# Canonical source: icohangar-ops/_cubiczan-shared · tools/verify_evidence_matrix.py
-# Canonical kit commit: ceb4831114d31a5c97ab2225242d93abc443fc29 (feat(evidence): canonical verifier v1.0.0)
+# Canonical source: icohangar-ops/consensus-hardening-protocol · tools/verify_evidence_matrix.py
+# Canonical kit commit: pinned post-merge via `git log -1 --follow -- tools/verify_evidence_matrix.py`
+# on main (introduced as ceb4831114d31a5c97ab2225242d93abc443fc29 in _cubiczan-shared, archived).
 import argparse
 import hashlib
 import json
@@ -741,7 +742,7 @@ def print_report(verdicts, global_failures, n_claims, matrix_path) -> int:
     """Print the verdict table and closing line; returns the failing-claim count."""
     print(f"=== evidence matrix: {matrix_path} ===")
     print(f"verifier: verify_evidence_matrix.py v{EVIDENCE_MATRIX_VERIFIER_VERSION} "
-          "(canonical kit: icohangar-ops/_cubiczan-shared)")
+          "(canonical kit: icohangar-ops/consensus-hardening-protocol)")
 
     failed_claim_ids = set()
     current_id = None
