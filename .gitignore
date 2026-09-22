@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+dist/
+build/
+.DS_Store
+.vscode/
+.idea/
+*.egg
+.chp_registry.json
+node_modules/
+
+# Local separate git dir (sandbox workaround)
+chp.git/
+

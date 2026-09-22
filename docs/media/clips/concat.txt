@@ -1,0 +1,17 @@
+file 's1.png'
+duration 15
+file 's2.png'
+duration 25
+file 's3.png'
+duration 25
+file 's4.png'
+duration 35
+file 's5.png'
+duration 20
+file 's6.png'
+duration 20
+file 's7.png'
+duration 25
+file 's8.png'
+duration 15
+file 's8.png'

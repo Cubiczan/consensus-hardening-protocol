@@ -1,94 +1,227 @@
-> **Status:** Absorbed into [`consensus-hardening-protocol`](https://github.com/icohangar-ops/consensus-hardening-protocol).
-> The `.chp` kit injector from this repo is now `chp init` there — use `pip install consensus-hardening-protocol` (and for TypeScript Profile B: `npm install @cubiczan/chp`).
-> This repository is kept for history and will be archived.
+# Consensus Hardening Protocol
 
-# _cubiczan-shared
+[![PyPI](https://img.shields.io/pypi/v/consensus-hardening-protocol)](https://pypi.org/project/consensus-hardening-protocol/)
+[![npm](https://img.shields.io/npm/v/@cubiczan/chp)](https://www.npmjs.com/package/@cubiczan/chp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Portfolio-wide tooling. This repo holds no product code — it holds the scripts that keep
-~120 sibling repos converging on the same contract, plus the canonical text of the
-Cubiczan stack blurb that gets injected into their READMEs.
+Adversarial decision hardening for multi-agent systems. An R0 entry gate, a
+mandatory adversary pass, domain-dependent score floors, a human lock, and a
+signed decision record — so a high-stakes decision made by agents can be
+audited after the fact.
 
-The leading underscore marks it as infrastructure, alongside `_cubiczan-updates` and
-`_AUDIT`. `inject_stack.py` deliberately excludes all three from its own sweep.
+**Canonical repo:** [icohangar-ops/consensus-hardening-protocol](https://github.com/icohangar-ops/consensus-hardening-protocol)
 
-| File | What it is |
-|---|---|
-| [`CUBICZAN_STACK.md`](CUBICZAN_STACK.md) | Canonical stack blurb injected into sibling READMEs, plus the standard-kit docs |
-| [`inject_stack.py`](inject_stack.py) | Seeds each sibling repo with the standard kit (README header, `AGENTS.md`, `.chp/`, resilience reference, evidence-matrix gate) |
-| [`tools/verify_evidence_matrix.py`](tools/verify_evidence_matrix.py) | Canonical evidence-matrix verifier (v1.0.0) — vendored, version-stamped, into sibling repos |
-| [`update_github_meta.py`](update_github_meta.py) | Sets GitHub descriptions and topics across the org |
+## Install
 
-Both scripts are stdlib-only Python and **dry-run by default**. Neither writes anything
-until you pass `--apply`.
+### Python (PyPI)
 
-## Standard-kit injector
+Profile A — deliberation engine, R0/foundation/adversary/human lock, CLI, and
+the normative spec + conformance harness.
 
 ```bash
-python3 inject_stack.py                       # dry-run across every sibling repo
-python3 inject_stack.py --selfcheck           # show detected language per repo
-python3 inject_stack.py --kit agents,chp --repos meshcfo,cleanmandate --apply
-python3 inject_stack.py --kit resilience --apply
+pip install consensus-hardening-protocol
 ```
 
-Kit parts: `readme` (opt-in), `agents`, `chp`, `resilience`, `evidence` (opt-in — it
-scaffolds a failing gate that the repo's author must fill). Idempotent — re-running skips
-files that already exist. `--force` overwrites managed files. Full behaviour, including how
-the resilience part detects each repo's language, is documented in
-[`CUBICZAN_STACK.md`](CUBICZAN_STACK.md#standard-kit-inject_stackpy).
-
-## Evidence matrix
-
-`--kit evidence` seeds a sibling repo with the **evidence-matrix gate**: a
-byte-identical, version-stamped vendored copy of the canonical verifier
-([`tools/verify_evidence_matrix.py`](tools/verify_evidence_matrix.py)), a scaffold
-`evidence/matrix.yaml`, the required `evidence-matrix` CI job, and (once) the README
-norm that every capability claim is backed by the matrix.
-
-Per-repo adoption: author real matrix rows from the current tree — back each claim with
-evidence that exists (a test, a script, a manifest field, a hashed artifact) or reword
-the claim to what is true, visibly in the PR diff — keep the CI job required, and state
-the norm in the repo README. The verifier is stdlib-only, network-free, and refuses
-fail-closed: there is no invocation of it that passes an unverified repo. The part is
-opt-in because the scaffold matrix is failing by design; its details live in
-[`CUBICZAN_STACK.md`](CUBICZAN_STACK.md#standard-kit-inject_stackpy).
-
-## GitHub metadata sweeper
-
-Fixes the discoverability gap found in the July 2026 portfolio audit: 26 repos had no
-description at all — including the highest-reach repo in the dependency graph — and only 12
-carried topics.
-
-```bash
-python3 update_github_meta.py                 # dry-run
-python3 update_github_meta.py --apply         # fill gaps
-python3 update_github_meta.py --apply --repos market-radar,geopulse
-python3 update_github_meta.py --apply --overwrite-descriptions
-```
-
-Safe in three ways beyond the dry-run default:
-
-- **Existing descriptions are kept.** A hand-written description beats a generated one, so
-  the tool only fills empty ones unless you explicitly pass `--overwrite-descriptions`.
-- **Topics are additive.** It computes the set difference and adds only what's missing, so
-  curated topics are never dropped.
-- **Names are validated first** against the live org listing, so a typo is reported up
-  front rather than 404ing halfway through a sweep.
-
-Auth comes from the `gh` CLI, which is already authenticated. No token is read, stored, or
-passed on a command line — so nothing here can leak one. If `gh` isn't authenticated the
-tool says so and exits.
-
-## Adding a repo to the sweeper
-
-Add an entry to `REPOS` in `update_github_meta.py`:
+- Package: [consensus-hardening-protocol](https://pypi.org/project/consensus-hardening-protocol/)
+- Requires Python 3.10+ · no required dependencies
 
 ```python
-"my-repo": {
-    "description": "One line a stranger can identify the repo from. Under 350 chars.",
-    "topics": ["lowercase-hyphenated", "max-20-of-them"],
-},
+from chp import CHPOrchestrator, DecisionRegistry
 ```
 
-Then dry-run. Topics must be lowercase alphanumeric plus hyphens, at most 50 characters
-each and 20 per repo — GitHub rejects the whole call otherwise, so the tool validates
-before writing anything.
+```bash
+chp init --apply
+```
+
+### TypeScript (npm)
+
+Profile B — capital / spend gate, float-aware canonical JSON, and signed audit
+ledger. Lives in a sibling package so Node apps can depend on a small surface:
+
+```bash
+npm install @cubiczan/chp
+```
+
+- Package: [@cubiczan/chp](https://www.npmjs.com/package/@cubiczan/chp)
+- Source: [icohangar-ops/cubiczan-chp](https://github.com/icohangar-ops/cubiczan-chp)
+
+```ts
+import { evaluateGate, approveHuman } from "@cubiczan/chp";
+```
+
+Both packages are checked against `spec/CHP-v1.0.md` golden vectors
+(Python reference: 70/70 · TypeScript Profile B: 30/30).
+
+### MCP servers (installable wedge)
+
+| Server | Install | Role |
+|--------|---------|------|
+| [`@cubiczan/chp-mcp`](https://www.npmjs.com/package/@cubiczan/chp-mcp) | `npx -y @cubiczan/chp-mcp` | Profile B spend/HITL (`evaluate_spend_gate`) |
+| [`@cubiczan/agent-conductor`](https://www.npmjs.com/package/@cubiczan/agent-conductor) | `npx -y @cubiczan/agent-conductor` | AGENTS.md + skills + Profile A `decision_gate` / `decision_adversary` |
+| [`@cubiczan/governed-mcp-gateway`](https://www.npmjs.com/package/@cubiczan/governed-mcp-gateway) | `npx -y @cubiczan/governed-mcp-gateway` | HTTP MCP control plane (principal + vault) |
+| [`@cubiczan/codesentinel-mcp`](https://www.npmjs.com/package/@cubiczan/codesentinel-mcp) | `npx -y @cubiczan/codesentinel-mcp` | Codebase health analysis |
+
+Both are registered under the [official MCP Registry](https://registry.modelcontextprotocol.io) (`io.github.icohangar-ops/*`).
+
+**Conformance:** Profile A **70/70** · Profile B **30/30** (golden vectors in `spec/`).
+
+## How the pieces fit
+
+CHP is the **engine**. MCP servers are the **transport**. Clients never call
+the package directly unless they are libraries themselves.
+
+```text
+MCP client (Cursor / Claude / …)
+        │  tools/call
+        ▼
+┌───────────────────────────┐
+│  MCP server (transport)   │  ← agent-conductor, codesentinel-mcp, …
+│  decision_gate            │
+│  decision_adversary       │
+│  evaluate_spend_gate      │
+└─────────────┬─────────────┘
+              │ depends on
+              ▼
+┌───────────────────────────┐
+│  Published CHP packages   │
+│  PyPI: consensus-hardening-protocol  (Profile A)
+│  npm:  @cubiczan/chp                 (Profile B)
+└───────────────────────────┘
+```
+
+| Layer | Role | Example |
+|-------|------|---------|
+| MCP client | Issues `tools/call` | Cursor, Claude Code, Copilot |
+| MCP server | Exposes CHP as tools | [agent-conductor](https://github.com/icohangar-ops/agent-conductor) (`decision_gate` → R0, `decision_adversary` → triangulation) |
+| Published package | Protocol implementation | this repo (PyPI) · [@cubiczan/chp](https://github.com/icohangar-ops/cubiczan-chp) (npm) |
+
+## What it does
+
+An agent that is confident and wrong is more dangerous than one that is slow.
+CHP puts four things in the way of a decision before it is allowed to stand:
+
+| Stage | Rule |
+|---|---|
+| **R0 gate** | The session cannot open unless the problem is solvable, scoped, valid and worth doing. All four, or `HALT`. |
+| **Foundation** | An adversary attacks the stated assumptions and scores the foundation. The score is gated against a floor that depends on the domain — 70 general, 85 blockchain, **100 finance**. |
+| **Adversary pass** | A dedicated agent argues against the emerging decision. Its findings are recorded, not summarised away. |
+| **Human lock** | A provisional lock becomes a real one only when a third party confirms it. |
+
+Every step lands in a `DecisionCase` that serialises to a signed record, so the
+question "why did we do this?" has a mechanical answer.
+
+## Quick start
+
+```python
+from chp import CHPOrchestrator, DecisionRegistry, DecisionCase, Dossier
+from chp.models import FoundationAttack, FoundationDisclosure
+
+orch = CHPOrchestrator(registry=DecisionRegistry())
+
+case = DecisionCase(
+    decision_id="fund-tier-1",
+    title="Fund the enterprise tier",
+    domain="capital_allocation",   # floors at 100, not 70
+    created_at="2026-08-21T10:00:00Z",
+    owner="cfo",
+    high_stakes=True,
+    dossier=Dossier(
+        core_problem="Should we fund the tier?",
+        goal_state=["grow ARR"],
+        current_state=["18 months runway"],
+        constraints=["no new raise"],
+        scope=["this fiscal year"],
+    ),
+)
+
+report = orch.run_initial_session(
+    case=case,
+    foundation_disclosure=FoundationDisclosure(
+        weakest_assumptions=["Market growth continues"],
+        invalidation_conditions=["Recession"],
+        key_vulnerability="Revenue concentration",
+    ),
+    foundation_attack=FoundationAttack(
+        assumption_attacks=["Market may contract"],
+        vulnerability_strike="Single customer dependency",
+        foundation_score=85,
+    ),
+)
+
+report.foundation_verdict   # Verdict.REFRAME — 85 is below the floor of 100
+report.initial_packet       # "" — nothing is emitted on a REFRAME
+```
+
+An 85 would have passed under a 70 floor. In a capital-allocation domain it does
+not, and that difference is the point of the library.
+
+## Seed a repository
+
+```bash
+chp init                 # dry run — shows what it would write
+chp init --apply         # writes .chp/
+```
+
+That drops the governance kit into `.chp/` — `R0_CONFIG.yaml`, the adversarial
+prompt set, the state machine, and the compliance checklist. It never replaces an
+existing file unless you pass `--force`, and it is safe to re-run.
+
+## The specification
+
+`spec/CHP-v1.0.md` is the normative specification. It is implementation-agnostic:
+any port in any language can be checked against the golden vectors.
+
+```bash
+python spec/conformance/run_conformance.py --adapter reference
+# CHP v1.0 conformance — adapter: reference
+#   passed  70/70
+#   result  CONFORMANT
+```
+
+Ports in other languages implement a line-JSON adapter (§7.2) and run against the
+same vectors:
+
+```bash
+python spec/conformance/run_conformance.py --adapter-cmd "node my-port.js"
+```
+
+Exit status is 0 only when every selected vector passes, so this drops into CI.
+
+## Known divergences
+
+`spec/DIVERGENCES.md` records what a survey of six shipped implementations found,
+each item cited to a file and symbol, each with a conformance vector so it fails
+CI rather than sitting in a comment.
+
+The highest-severity finding, **D-A1**, was that the canonical port hardcoded a
+foundation floor of 70 for every domain, so a finance decision scoring 70 cleared
+a gate documented as requiring 100. That is fixed here: `chp.foundation`
+resolves the floor from the domain, matches
+`spec/conformance/chp_reference.py` exactly, and a test asserts the two cannot
+drift apart. A domain that merely resembles a listed one — `finance_adversary`
+against `finance` — still takes the default floor per spec §5.3, but logs a
+warning, because reintroducing D-A1 through naming alone is too easy.
+
+## Optional extras
+
+```bash
+pip install "consensus-hardening-protocol[resilience]"   # pulls cubiczan-resilience from PyPI
+pip install "consensus-hardening-protocol[cockroachdb]"  # distributed registry
+```
+
+The `resilience` extra depends on [`cubiczan-resilience`](https://pypi.org/project/cubiczan-resilience/) (timeout, jittered backoff, circuit breaker). TypeScript / Rust ports: [`@cubiczan/resilience`](https://www.npmjs.com/package/@cubiczan/resilience) and [`resilient-call`](https://crates.io/crates/resilient-call).
+
+Without the `resilience` extra, the package uses a dependency-free retry with
+exponential backoff that honours `max_attempts` but not `timeout` — bounding an
+arbitrary call without threads is not portable.
+
+`DecisionRegistry` is in-memory by default and auto-detects a CockroachDB backend
+when one is reachable. The database layer ships with the Cognitive Mesh host
+rather than this package.
+
+`chp.AdversaryMeshAgent` is an adapter for that same host. It is exported lazily,
+so the package imports fine without it.
+
+## Licence
+
+MIT.
