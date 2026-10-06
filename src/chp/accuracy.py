@@ -84,3 +84,36 @@ class FinancialAnalysisGuard:
             triangulation=triangulation,
             violations=list(dict.fromkeys(violations)),
         )
+
+
+@dataclass(frozen=True)
+class AccuracyGuardResult:
+    """Outcome of :func:`run_accuracy_guard`."""
+
+    passes: bool
+    reason: str
+    required_action: str
+
+
+def run_accuracy_guard(case: DecisionCase, floor: int = 100) -> AccuracyGuardResult:
+    """Check whether a case meets the accuracy bar for a clean lock.
+
+    A foundation score below ``floor``, open structural vulnerabilities, or
+    unresolved blind spots force human verification instead of a clean lock.
+    A case already LOCKED while still carrying vulnerabilities or blind spots is
+    flagged for downgrade to human review.
+    """
+    issues = CFOAccuracyPolicy(required_foundation_score=floor).violations(case)
+    if issues:
+        return AccuracyGuardResult(
+            passes=False,
+            reason="; ".join(issues),
+            required_action="REQUIRES_HUMAN_VERIFICATION",
+        )
+    if case.status == SessionStatus.LOCKED and (case.structural_vulnerabilities or case.blind_spots):
+        return AccuracyGuardResult(
+            passes=False,
+            reason="LOCKED status but vulnerabilities or blind spots detected — downgrade to human review",
+            required_action="DOWNGRADE_TO_HUMAN_REVIEW",
+        )
+    return AccuracyGuardResult(passes=True, reason="accuracy guard clear", required_action="PROCEED")

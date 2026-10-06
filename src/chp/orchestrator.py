@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Iterable, Optional
 
 from chp.devil import (
     build_phase0_devils_advocate,
@@ -83,6 +83,9 @@ class CHPReport:
         return "\n".join(lines)
 
 
+DEFAULT_HIGH_STAKES_DOMAINS = frozenset({"capital_allocation", "board_decision"})
+
+
 class CHPOrchestrator:
     """Minimal orchestration layer for CHP-backed decision sessions."""
 
@@ -91,9 +94,14 @@ class CHPOrchestrator:
         *,
         registry: Optional[DecisionRegistry] = None,
         context: Optional[ContextEngine] = None,
+        high_stakes_domains: Iterable[str] = DEFAULT_HIGH_STAKES_DOMAINS,
     ) -> None:
         self.registry = registry or DecisionRegistry()
         self.context = context or ContextEngine()
+        #: Domains the R0 "worth it" check treats as high-stakes even when the
+        #: case itself is not flagged ``high_stakes``. Callers with their own
+        #: domain vocabulary (e.g. M&A integration workstreams) extend this.
+        self.high_stakes_domains = frozenset(high_stakes_domains)
 
     def run_initial_session(
         self,
@@ -113,7 +121,7 @@ class CHPOrchestrator:
             solvable=True,
             scoped=bool(case.dossier and case.dossier.scope),
             valid=bool(case.dossier and case.dossier.current_state),
-            worth_it=case.high_stakes or case.domain in {"capital_allocation", "board_decision"},
+            worth_it=case.high_stakes or case.domain in self.high_stakes_domains,
         )
 
         foundation_errors = validate_foundation_pair(foundation_disclosure, foundation_attack)
@@ -226,6 +234,23 @@ class CHPOrchestrator:
         case.add_round(record)
         case.status = incoming_status
         case.state_snapshots.append(snapshot)
+        return case
+
+    def advance_to_provisional_lock(self, decision_id: str) -> DecisionCase:
+        """Move a registered case to PROVISIONAL_LOCK.
+
+        A halted case cannot advance, and a case awaiting reframing must be
+        reframed first. This is the status transition third-party validation
+        requires before it can lock the case.
+        """
+        case = self.registry.get(decision_id)
+        if not case:
+            raise KeyError(f"Unknown decision_id: {decision_id}")
+        if case.status == SessionStatus.HALT:
+            raise ValueError("Cannot advance a halted case")
+        if case.status == SessionStatus.REFRAME_REQUIRED:
+            raise ValueError("Case requires reframing before advancement")
+        case.status = SessionStatus.PROVISIONAL_LOCK
         return case
 
     def apply_validation(self, decision_id: str, validation) -> DecisionCase:
