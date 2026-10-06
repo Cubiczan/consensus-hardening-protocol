@@ -186,7 +186,10 @@ def _eq(actual: Any, expected: Any) -> bool:
     but every key the spec names must match exactly.
     """
     if isinstance(expected, dict) and isinstance(actual, dict):
-        return all(k in actual and _eq(actual[k], v) for k, v in expected.items())
+        # claims[].detail is human-readable prose and non-normative (spec §6.6):
+        # rendering floats inside it is not a conformance contract.
+        return all(k in actual and _eq(actual[k], v) for k, v in expected.items()
+                   if k != "detail")
     if isinstance(expected, list) and isinstance(actual, list):
         return len(expected) == len(actual) and all(_eq(a, e) for a, e in zip(actual, expected))
     if isinstance(expected, bool) or isinstance(actual, bool):

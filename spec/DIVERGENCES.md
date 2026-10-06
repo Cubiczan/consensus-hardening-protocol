@@ -87,8 +87,21 @@ verification, reconciliation, or shared ledger silently fails. Python's `json.du
 escapes non-ASCII by default while `JSON.stringify` emits it literally, so a rationale
 containing "café" diverges even when key order matches.
 
-**Spec:** §3.1 — recursive key sort, no whitespace, literal UTF-8.
-**Vectors:** `canon/key-order-independence-*`, `canon/unicode-preserved`, `canon/nested-sorting`.
+A **third cause, and the one that bites hardest in practice, is number rendering.** A
+whole-number float serialises as `100.0` in Python, `100` in JavaScript, and `100` in Rust
+(`format!("{}", 100.0_f64)`), so `{"notional": 100.0}` hashes differently per language even with
+identical key order and Unicode. Earlier revisions of this entry attributed the mismatch to key
+order and Unicode alone, which let ports pass those vectors yet still disagree on every hash
+whose payload held a whole-number float (`notional`, `confidence`).
+
+**Spec:** §3.1 — recursive key sort (UTF-16 order), no whitespace, literal UTF-8, **RFC 8785
+number rendering**. §6.6 — `claims[].detail` is non-normative.
+**Vectors:** `canon/key-order-independence-*`, `canon/unicode-preserved`, `canon/nested-sorting`,
+`canon/whole-number-float`, `canon/integer-equals-whole-float`, `canon/negative-zero`,
+`canon/exp-threshold-*`, `canon/shortest-roundtrip`, `canon/utf16-key-order`.
+**Migration:** this changes every Profile B `content_hash` (previously computed over `100.0`).
+Ports that special-case floats (e.g. a "treat every number as a float" helper) must switch to
+plain RFC 8785 rendering and re-verify against the regenerated vectors.
 
 ### D-B3 · Hashed field sets differ, and include wall-clock time
 

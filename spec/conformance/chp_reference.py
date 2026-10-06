@@ -26,20 +26,77 @@ CHP_VERSION = "1.0"
 # --------------------------------------------------------------------------
 
 
+_MAX_SAFE_INT = 2**53 - 1
+
+
+def _canon_number(x: Any) -> str:
+    """Render a JSON number per spec §3.1 (RFC 8785 §3.2.2.3, ES Number::toString).
+
+    A number is an IEEE-754 double. ``100.0`` and ``100`` are the same number and
+    both render ``100``; this is what lets Python, JS and Rust agree without any
+    schema knowledge. Integers outside +/-(2**53 - 1) are rejected.
+    """
+    if isinstance(x, int):
+        if abs(x) > _MAX_SAFE_INT:
+            raise ValueError(f"integer {x} outside +/-(2**53-1); encode as a string")
+        return str(x)
+    if x != x or x in (float("inf"), float("-inf")):
+        raise ValueError("NaN/Infinity are not representable in canonical JSON")
+    if x == 0:
+        return "0"  # also covers -0.0
+    sign = "-" if x < 0 else ""
+    # repr() yields the shortest round-trip digits, the same digits ES selects.
+    mant, _, exp = repr(abs(x)).partition("e")
+    whole, _, frac = mant.partition(".")
+    digits = (whole + frac).lstrip("0")
+    n = len(whole) + (int(exp) if exp else 0)
+    if whole.strip("0") == "":  # 0.000123 -> leading zeros of frac are not digits
+        n = -(len(frac) - len(frac.lstrip("0"))) + (int(exp) if exp else 0)
+    digits = digits.rstrip("0") or "0"
+    k = len(digits)
+    if k <= n <= 21:
+        out = digits + "0" * (n - k)
+    elif 0 < n <= 21:
+        out = digits[:n] + "." + digits[n:]
+    elif -6 < n <= 0:
+        out = "0." + "0" * (-n) + digits
+    else:
+        e = n - 1
+        es = ("+" if e >= 0 else "-") + str(abs(e))
+        out = digits[0] + ("." + digits[1:] if k > 1 else "") + "e" + es
+    return sign + out
+
+
+def _canon(v: Any) -> str:
+    if v is None:
+        return "null"
+    if v is True:
+        return "true"
+    if v is False:
+        return "false"
+    if isinstance(v, (int, float)):
+        return _canon_number(v)
+    if isinstance(v, str):
+        return json.dumps(v, ensure_ascii=False)
+    if isinstance(v, (list, tuple)):
+        return "[" + ",".join(_canon(i) for i in v) + "]"
+    if isinstance(v, Mapping):
+        # §3.1: sort by UTF-16 code unit, which differs from Python's code-point order
+        # for characters above U+FFFF.
+        keys = sorted(v, key=lambda k: k.encode("utf-16-be"))
+        return "{" + ",".join(json.dumps(k, ensure_ascii=False) + ":" + _canon(v[k]) for k in keys) + "}"
+    raise TypeError(f"not JSON-serialisable: {type(v).__name__}")
+
+
 def canonical_json(payload: Mapping[str, Any]) -> str:
     """Serialise a mapping to CHP canonical JSON (spec §3.1).
 
-    Sorted keys, no insignificant whitespace, UTF-8, no NaN/Infinity. Two
-    implementations that agree on the field set MUST produce byte-identical
-    output — this is what makes cross-language hash comparison possible.
+    Sorted keys (UTF-16 order), no insignificant whitespace, literal UTF-8,
+    RFC 8785 number rendering, no NaN/Infinity. Two implementations that agree
+    on the field set MUST produce byte-identical output — this is what makes
+    cross-language hash comparison possible.
     """
-    return json.dumps(
-        payload,
-        sort_keys=True,
-        separators=(",", ":"),
-        ensure_ascii=False,
-        allow_nan=False,
-    )
+    return _canon(payload)
 
 
 def content_hash(payload: Mapping[str, Any]) -> str:

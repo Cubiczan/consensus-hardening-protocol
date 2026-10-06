@@ -49,13 +49,23 @@ def canon_vectors() -> dict:
         {"name": "unicode-preserved", "input": {"note": "café ✓", "n": 1}},
         {"name": "float-and-bool", "input": {"f": 0.55, "t": True, "n": None}},
         {"name": "empty-object", "input": {}},
+        # §3.1 number rendering (RFC 8785): the cases where Python repr, JSON.stringify
+        # and Rust format! used to disagree.
+        {"name": "whole-number-float", "input": {"notional": 100.0}},
+        {"name": "integer-equals-whole-float", "input": {"notional": 100}},
+        {"name": "negative-zero", "input": {"x": -0.0}},
+        {"name": "exp-threshold-1e21", "input": {"hi": 1e21, "lo": 1e20}},
+        {"name": "exp-threshold-1e-7", "input": {"hi": 0.000001, "lo": 1e-7}},
+        {"name": "shortest-roundtrip", "input": {"s": 0.1 + 0.2, "m": 5e-324, "big": 1.7976931348623157e308}},
+        {"name": "utf16-key-order", "input": {"\uffff": 1, "\U00010000": 2}},
     ]
     return {
         "spec": f"CHP v{CHP_VERSION} §3.1–3.2",
         "note": (
             "key-order-independence-a and -b MUST produce identical canonical "
             "form and hash. This is the property that makes cross-language "
-            "verification possible."
+            "verification possible. whole-number-float and "
+            "integer-equals-whole-float MUST be byte-identical (100.0 == 100)."
         ),
         "vectors": [
             {**c, "canonical": canonical_json(c["input"]), "sha256": content_hash(c["input"])}

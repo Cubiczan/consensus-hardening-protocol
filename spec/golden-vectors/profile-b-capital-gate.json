@@ -67,7 +67,7 @@
             "detail": "confidence 0.8 vs min 0.55"
           }
         ],
-        "content_hash": "4610642fe2682d765c2716a874692b842e00ab9489735d12a135dc1d426633b8",
+        "content_hash": "9dbd1de2965b0f2ceedc0c083f858bd86531b61821366752b92bc5405e89a13d",
         "committed_delta": 100.0
       }
     },
@@ -117,7 +117,7 @@
             "detail": "confidence 0.9 vs min 0.55"
           }
         ],
-        "content_hash": "77748976a5c0b2ce91f974299ff009858534209dae0ca2ee3cdc8750e3bbb2c9",
+        "content_hash": "c1632353c18df6dc7df8b00e3bc37ccd0b13ab450def40f06431d6564a8e0b8f",
         "committed_delta": 0.0
       }
     },
@@ -217,7 +217,7 @@
             "detail": "confidence 0.9 vs min 0.55"
           }
         ],
-        "content_hash": "9d41b833af4c77387a6a6eefa7dfcab2958a27dbc8d77bf1da034a12404b9019",
+        "content_hash": "737171e300eb25b521a41f632b16bc7a5f0d7af9ed540bba9f20b308c9500bfb",
         "committed_delta": 0.0
       }
     },
@@ -267,7 +267,7 @@
             "detail": "confidence 0.9 vs min 0.55"
           }
         ],
-        "content_hash": "fd385ca0c0107d115d64c5ed5da4956125676675938337fa88ed22e21704777b",
+        "content_hash": "e20f6433be3436921eed6ba1137df105f328ea7abf6b653b78f6a96dd92edf6f",
         "committed_delta": 0.0
       }
     },
@@ -317,7 +317,7 @@
             "detail": "confidence 0.9 vs min 0.55"
           }
         ],
-        "content_hash": "557bcda7b5faf76f89e01037e93fab00452634e2d6697e8f6e75b974ef394bd4",
+        "content_hash": "b922813da15a6db92da45face2fafd79fd0b4e9dcf367447502e6f02fd03a0c1",
         "committed_delta": 0.0
       }
     },
@@ -367,7 +367,7 @@
             "detail": "confidence 0.1 vs min 0.55"
           }
         ],
-        "content_hash": "c475dac78901c5bdbee585d521414d4d264037513b01f8f080ec13c83c9069f1",
+        "content_hash": "0467651905b6da925a1a79844e013443bf761dcb4809fc3c54cc73086bd4b917",
         "committed_delta": 0.0
       }
     },
@@ -417,7 +417,7 @@
             "detail": "confidence 0.9 vs min 0.55"
           }
         ],
-        "content_hash": "c990d34065867d63675fa1a1697fbbae0ecb233da4c65b5c424e0b0bd177af5c",
+        "content_hash": "3cbb4309cd449f4e39d4151556669efa0e5476d9c46991f0862eccfc472c9267",
         "committed_delta": 0.0
       }
     },
@@ -467,7 +467,7 @@
             "detail": "confidence 0.9 vs min 0.55"
           }
         ],
-        "content_hash": "4ceb04cff7d1c04db6624eec6f9c47a99a7564ed07e97c15874892c59c29ccb0",
+        "content_hash": "d2dbd7275d2bf339456ef2ba6f6b04f9b4d6b6badfaa61d824c4bbe5f91b19f5",
         "committed_delta": 0.0
       }
     },
@@ -517,7 +517,7 @@
             "detail": "confidence 0.9 vs min 0.55"
           }
         ],
-        "content_hash": "05cc853147720034d0676007aada9814b2a7b3062c27dcbcab3a17229ae59ba8",
+        "content_hash": "c3c527adae1ef5669f98534c51a565843787c8eb82d2af78db2dd14a0ad6f87c",
         "committed_delta": 0.0
       }
     },
@@ -562,7 +562,7 @@
             "detail": "projected 100.0 vs daily cap 2500.0"
           }
         ],
-        "content_hash": "6fb82bd7c57223274452ca9e038fde09047455cdd250725f882f92efe2a9c804",
+        "content_hash": "fc22cfdf8d7d04d1ee1a07ee9618a07846c93ce55b78de670d9f8d90772fdc87",
         "committed_delta": 100.0
       }
     }
@@ -590,7 +590,7 @@
             "detail": "approved by cfo@example.com"
           }
         ],
-        "content_hash": "822dec6c003ba5d3ff493363b0638b817537624625857797b02baa2f5067dc8c",
+        "content_hash": "0cc678c9af42b45f8f4a3fe64f0c75a29d89c050302c8c2cad61aa52733c9e51",
         "committed_delta": 300.0
       }
     },
@@ -641,7 +641,7 @@
             "detail": "confidence 0.9 vs min 0.55"
           }
         ],
-        "content_hash": "d8364053ecf2f8e3c05d8f39e9855840aab4a767d58a29e9f4f682a1db232ffa",
+        "content_hash": "efd881a5482e56b2d648ea041218b9119123b96a9ee22848791e015b3855fe9a",
         "committed_delta": 0.0
       }
     },
@@ -692,7 +692,7 @@
             "detail": "confidence 0.1 vs min 0.55"
           }
         ],
-        "content_hash": "37aab0d83a29fe02eea5d50b3e478ddee10312a04c755ea257e385287f10aec5",
+        "content_hash": "5fe8d366212587310e3bfeaae81a76daa55f681f0fb3a6bf6e52621c4d1e27e2",
         "committed_delta": 0.0
       }
     },
@@ -743,7 +743,7 @@
             "detail": "confidence 0.9 vs min 0.55"
           }
         ],
-        "content_hash": "c7cfa7ca2fe5a64ddac6d64f3855d335c9f747fd2d092c816c9aceb1a30d2eae",
+        "content_hash": "1f1272809c164e1e42a1b64334c146b67bd54a20942210478d0c3c3bc83bb47a",
         "committed_delta": 0.0
       }
     }

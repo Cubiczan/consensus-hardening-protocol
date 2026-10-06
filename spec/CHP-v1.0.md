@@ -88,14 +88,28 @@ An implementation **MUST** serialise a hashed payload as JSON with:
 - no insignificant whitespace (`,` and `:` separators, no spaces);
 - UTF-8 output with characters emitted literally, **not** `\uXXXX`-escaped;
 - `NaN`, `Infinity`, and `-Infinity` rejected as an error, never serialised;
-- array order preserved exactly (arrays are ordered data, not sets).
+- array order preserved exactly (arrays are ordered data, not sets);
+- **numbers rendered per [RFC 8785 §3.2.2.3](https://www.rfc-editor.org/rfc/rfc8785#section-3.2.2.3)**
+  (the ECMAScript `Number::toString` algorithm). A number is an IEEE-754 double: the shortest
+  round-trip digits, positional notation for `1e-6 <= |x| < 1e21`, otherwise exponent form
+  (`1e+21`, `1e-7`), and `-0` renders as `0`. There is **no int/float distinction**: `100.0`
+  and `100` are the same number and both render `100`. Integers outside ±(2^53 − 1) **MUST**
+  be carried as strings; an implementation **MUST** reject them rather than round.
 
 ```
 {"a":2,"b":1}                       ← canonical
 {"b":1,"a":2}                       ← NOT canonical (unsorted)
 {"note":"café"}                ← NOT canonical (escaped non-ASCII)
 {"a": 2, "b": 1}                    ← NOT canonical (whitespace)
+{"notional":100.0}                  ← NOT canonical (renders 100)
 ```
+
+Number rendering is pinned because Python's `repr` (`100.0`), JavaScript's `JSON.stringify`
+(`100`) and Rust's `format!("{}", 100.0_f64)` (`100`) otherwise produce different bytes — and
+therefore different hashes — for the same decision. Implementations in languages with a
+native ECMAScript-style serialiser (JavaScript's `JSON.stringify`) need no special handling.
+Python needs a formatter, and Rust must render `f64` with `format!("{}", x)` rather than
+`serde_json`, which keeps `100.0`. A reference Python formatter is in `spec/conformance/chp_reference.py`.
 
 `{"b":1,"a":2}` and `{"a":2,"b":1}` describe the same object and **MUST** hash
 identically. Golden vectors: [`golden-vectors/canonicalization.json`](golden-vectors/canonicalization.json).
@@ -373,7 +387,9 @@ and a `content_hash` over the normative field set:
  "confidence":…,"state":…,"allowed":…,"requires_human":…,"failed_rules":[…]}
 ```
 
-`failed_rules` is sorted. `decision_id` and `timestamp` are recorded **alongside** the
+`failed_rules` is sorted. The `claims[].detail` strings are human-readable prose and are
+**non-normative**: conformance compares each claim's `rule` and `passed`, never `detail`, so a
+port need not reproduce another language's float formatting inside messages. `decision_id` and `timestamp` are recorded **alongside** the
 hash, never inside it — including them would make the hash unreproducible and defeat
 cross-implementation verification. Records **SHOULD** be appended to a §3.3 ledger.
 
