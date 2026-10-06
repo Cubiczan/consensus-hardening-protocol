@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "spec" / "conformance"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "spec" / "conformance"))
 import chp_reference as ref  # noqa: E402
 
 
