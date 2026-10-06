@@ -81,6 +81,27 @@ class DecisionRegistry:
             return self._db_load_all()
         return []
 
+    def count(self) -> int:
+        """Number of known decision cases."""
+        return len(self.all())
+
+    def find_by_domain(self, domain: str) -> List[DecisionCase]:
+        """Cases whose domain equals ``domain`` (case-insensitive)."""
+        wanted = domain.lower()
+        return [c for c in self.all() if c.domain.lower() == wanted]
+
+    def find_by_status(self, status: SessionStatus) -> List[DecisionCase]:
+        """Cases currently in ``status``."""
+        return [c for c in self.all() if c.status == status]
+
+    def remove(self, decision_id: str) -> bool:
+        """Drop a case from the local cache. Returns whether it was present.
+
+        The distributed store is append-only decision history and is not
+        modified; only the in-process cache entry is removed.
+        """
+        return self._cases.pop(decision_id, None) is not None
+
     def save(self, path: str | Path) -> None:
         """Save to JSON file (local cache) and CockroachDB (distributed)."""
         target = Path(path)
